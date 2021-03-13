@@ -1,0 +1,18 @@
+# editorconfig.org
+root = true
+
+[*]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+quote_type = double
+curly_bracket_next_line = false
+spaces_around_operators = true
+indent_brace_style = K&R
+
+[*.md]
+trim_trailing_whitespace = false
+quote_type = auto

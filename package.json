@@ -1,0 +1,83 @@
+{
+  "name": "nuxt-hue",
+  "version": "0.0.0",
+  "description": "Enlight your Nuxt experience",
+  "keywords": [
+    "nuxt",
+    "module",
+    "nuxt-module"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com/lihbr/nuxt-ackee.git"
+  },
+  "license": "MIT",
+  "author": "Lucie Haberer <hello@lihbr.com> (https://lihbr.com)",
+  "main": "dist/module.js",
+  "types": "dist/module.d.ts",
+  "bin": "bin/nuxt-hue.js",
+  "files": [
+    "bin",
+    "dist"
+  ],
+  "scripts": {
+    "build": "siroc build",
+    "dev": "nuxt-ts example",
+    "lint": "eslint --ext .js,.ts,.vue .",
+    "release": "yarn build && yarn test && standard-version && git push --follow-tags && npm publish",
+    "test": "yarn lint && jest"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint",
+      "commit-msg": "commitlint --env HUSKY_GIT_PARAMS"
+    }
+  },
+  "dependencies": {
+    "chalk": "4.1.0",
+    "consola": "2.15.3",
+    "defu": "3.2.2",
+    "exit": "0.1.2",
+    "inquirer": "8.0.0",
+    "listr": "0.14.3",
+    "minimist": "1.2.5",
+    "node-fetch": "2.6.1",
+    "prompts": "2.4.0",
+    "rc9": "1.2.0",
+    "rxjs": "6.6.6"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-runtime": "7.13.10",
+    "@babel/preset-env": "7.13.10",
+    "@babel/preset-typescript": "7.13.0",
+    "@commitlint/cli": "12.0.1",
+    "@commitlint/config-conventional": "12.0.1",
+    "@nuxt/test-utils": "0.2.0",
+    "@nuxt/types": "2.15.3",
+    "@nuxt/typescript-runtime": "2.1.0",
+    "@nuxtjs/eslint-config-typescript": "6.0.0",
+    "@siroc/jest-preset": "0.2.0",
+    "@types/exit": "0.1.31",
+    "@types/inquirer": "7.3.1",
+    "@types/jest": "26.0.20",
+    "@types/listr": "0.14.2",
+    "@types/prompts": "2.0.9",
+    "babel-eslint": "10.1.0",
+    "babel-jest": "26.6.3",
+    "eslint": "7.22.0",
+    "eslint-config-prettier": "8.1.0",
+    "eslint-plugin-prettier": "3.3.1",
+    "husky": "4.3.8",
+    "jest": "26.6.3",
+    "nuxt-edge": "latest",
+    "siroc": "0.8.0",
+    "standard-version": "9.1.1"
+  },
+  "engines": {
+    "node": ">=12.18.0",
+    "yarn": ">=1.22.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

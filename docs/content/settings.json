@@ -1,0 +1,18 @@
+{
+  "title": "Nuxt Hue",
+  "description": "Enlight your Nuxt experience",
+  "url": "https://nuxt-hue.lihbr.com",
+  "logo": {
+    "light": "/logo-light.svg",
+    "dark": "/logo-dark.svg"
+  },
+  "colors": {
+    "primary": "#cf7a13"
+  },
+  "github": {
+    "repo": "lihbr/nuxt-hue",
+    "branch": "master"
+  },
+  "twitter": "@li_hbr",
+  "layout": "single"
+}
