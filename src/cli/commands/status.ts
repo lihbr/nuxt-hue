@@ -1,4 +1,4 @@
-import { Config, logger } from "../../utils";
+import { NuxtHue, logger } from "../../utils";
 import pkg from "../../../package.json";
 import { Command } from "./Command";
 
@@ -7,18 +7,16 @@ export default {
   description: "Check Nuxt Hue status",
   usage: "status",
   async run(): Promise<void> {
-    const config = Config.read();
-
-    if (Config.hasBridge() && (await Config.isPaired())) {
+    if (NuxtHue.hasBridge() && (await NuxtHue.isPaired())) {
       logger.info(
         `Nuxt Hue is ${
-          Config.isEnabled() ? "enabled" : "disabled"
-        } and connected to a bridge (${config.hue.bridge.ip})`
+          NuxtHue.isEnabled() ? "enabled" : "disabled"
+        } and connected to a bridge (${NuxtHue.getBridge().ip})`
       );
     } else {
       logger.warn(
         `Nuxt Hue is ${
-          Config.isEnabled() ? "enabled" : "disabled"
+          NuxtHue.isEnabled() ? "enabled" : "disabled"
         } but not connected to a bridge\n\nConnect to one with:\n  $ ${
           pkg.name
         } connect`

@@ -1,6 +1,6 @@
 import chalk from "chalk";
 import pkg from "../../../package.json";
-import { Config, logger } from "../../utils";
+import { NuxtHue, logger } from "../../utils";
 import { Command } from "./Command";
 import commands from "./";
 
@@ -20,15 +20,13 @@ const ORDER: string[] = [
 ];
 
 async function getStatus(): Promise<string> {
-  const config = Config.read();
-
-  if (Config.hasBridge() && (await Config.isPaired())) {
+  if (NuxtHue.hasBridge() && (await NuxtHue.isPaired())) {
     return `Nuxt Hue is ${
-      Config.isEnabled() ? "enabled" : "disabled"
-    } and connected to a bridge (${config.hue.bridge.ip})`;
+      NuxtHue.isEnabled() ? "enabled" : "disabled"
+    } and connected to a bridge (${NuxtHue.getBridge().ip})`;
   } else {
     return `Nuxt Hue is ${
-      Config.isEnabled() ? "enabled" : "disabled"
+      NuxtHue.isEnabled() ? "enabled" : "disabled"
     } but not connected to a bridge`;
   }
 }

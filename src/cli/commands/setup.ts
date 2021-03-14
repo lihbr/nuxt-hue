@@ -1,6 +1,6 @@
 import Listr, { ListrTaskWrapper } from "listr";
 import { Observable } from "rxjs";
-import { Bridge, Config, logger } from "../../utils";
+import { Bridge, NuxtHue, logger } from "../../utils";
 import pkg from "../../../package.json";
 import { Command } from "./Command";
 
@@ -11,8 +11,8 @@ interface ConnectContext {
   pairedBridge: Bridge;
 }
 
-enum CODES {
-  NO_BRIDGES_FOUND = "No Bridges Found"
+enum Code {
+  NoBridgeFound = "No Bridges Found"
 }
 
 export const tasks = new Listr([
@@ -30,7 +30,7 @@ export const tasks = new Listr([
         ])
           .then(([bridges, _]) => {
             if (bridges.length === 0) {
-              observer.error(new Error(CODES.NO_BRIDGES_FOUND));
+              observer.error(new Error(Code.NoBridgeFound));
             } else {
               if (bridges.length === 1) {
                 task.title = "One Bridge Found";
@@ -70,7 +70,7 @@ export const tasks = new Listr([
   {
     title: "Saving Bridge...",
     task: (ctx: ConnectContext, task: ListrTaskWrapper) => {
-      Config.updateBridge(ctx.pairedBridge);
+      NuxtHue.updateBridge(ctx.pairedBridge);
       task.title = "Bridge Added Successfully";
     }
   }

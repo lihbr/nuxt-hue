@@ -1,4 +1,4 @@
-import { Config, logger } from "../../utils";
+import { NuxtHue, logger } from "../../utils";
 import { Command } from "./Command";
 
 export default {
@@ -6,7 +6,7 @@ export default {
   description: "Enable Nuxt Hue, makes your cooler",
   usage: "enable",
   run(): void {
-    Config.enable();
+    NuxtHue.enable();
     logger.success(`Nuxt Hue is now enabled`);
   }
 } as Command;

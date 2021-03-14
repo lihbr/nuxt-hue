@@ -1,10 +1,10 @@
 import inquirer from "inquirer";
-import { Config, Group, logger, Scene } from "../../utils";
+import { NuxtHue, Group, logger, Scene } from "../../utils";
 import pkg from "../../../package.json";
 import { Command } from "./Command";
 
-enum CODES {
-  NO_SCENE_IN_GROUP = "No Scene Found in Group"
+enum Code {
+  NoSceneInGroup = "No Scene Found in Group"
 }
 
 export default {
@@ -12,14 +12,14 @@ export default {
   description: `Select scenes Nuxt Hue needs to trigger`,
   usage: "scenes",
   async run(): Promise<void> {
-    if (!Config.hasBridge() || !Config.isPaired()) {
+    if (!NuxtHue.hasBridge() || !NuxtHue.isPaired()) {
       logger.warn(
         `Nuxt Hue not connected to a bridge\n\nConnect to one first with:\n  $ ${pkg.name} connect`
       );
       return;
     }
 
-    const bridge = Config.getBridge();
+    const bridge = NuxtHue.getBridge();
 
     const [groups, scenes] = await Promise.all([
       bridge.getGroups(),
@@ -87,7 +87,7 @@ export default {
       // TODO: Save scenes
       logger.success("\nSuccess");
     } else {
-      logger.error(CODES.NO_SCENE_IN_GROUP);
+      logger.error(Code.NoSceneInGroup);
     }
   }
 } as Command;

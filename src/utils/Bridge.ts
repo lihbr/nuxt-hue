@@ -1,9 +1,15 @@
 // @ts-ignore-next-line
 import fetch from "node-fetch";
 
-enum CODES {
-  PAIRING_TIMEOUT = "Pairing Timeout",
-  NOT_PAIRED = "Not Paired"
+enum Code {
+  PairingTimeout = "Pairing Timeout",
+  NotPaired = "Not Paired"
+}
+enum Method {
+  Get = "GET",
+  Post = "POST",
+  Put = "PUT",
+  Delete = "DELETE"
 }
 
 export interface Group {
@@ -21,19 +27,47 @@ export interface Scene {
 
 export class Bridge {
   static HUE_DISCOVERY = "https://discovery.meethue.com";
-  static PAIRING_TIMEOUT = 4500;
-  static CODES = CODES;
+  static PAIRING_TIMEOUT = 45000;
+  static API_TIMEOUT = 3000;
 
+  /**
+   * Query MeetHue API
+   */
+  static async query<T, Body = any>(
+    endpoint: string,
+    method: Method = Method.Get,
+    body?: Body
+  ): Promise<T> {
+    const options: { method: Method; timeout?: Number; body?: string } = {
+      method,
+      timeout: Bridge.API_TIMEOUT
+    };
+
+    if (body) {
+      options.body = JSON.stringify(body);
+    }
+
+    const res = await fetch(endpoint, options);
+    return (await res.json()) as T;
+  }
+
+  /**
+   * Discover bridges on the current network
+   */
   static async discoverBridges(): Promise<Bridge[]> {
-    const res = await fetch(Bridge.HUE_DISCOVERY);
-    const json = (await res.json()) as {
+    interface BridgeInformation {
       id: string;
       internalipaddress: string;
-    }[];
+    }
+
+    const json = await Bridge.query<BridgeInformation[]>(Bridge.HUE_DISCOVERY);
 
     return json.map(({ id, internalipaddress: ip }) => new Bridge(ip, id));
   }
 
+  /**
+   * Pair with any of the provided bridges (FIFO) with given device type
+   */
   static pairAny(bridges: Bridge[], devicetype: string): Promise<Bridge> {
     let elapsed = 0;
     return new Promise((resolve, reject) => {
@@ -50,14 +84,13 @@ export class Bridge {
           elapsed += 1000;
         } else {
           clearInterval(timer);
-          reject(new Error(Bridge.CODES.PAIRING_TIMEOUT));
+          reject(new Error(Code.PairingTimeout));
         }
       }, 1000);
     });
   }
 
   username?: string;
-  paired?: boolean;
 
   get api(): string {
     return `http://${this.ip}/api`;
@@ -65,21 +98,24 @@ export class Bridge {
 
   constructor(public ip?: string, public id?: string, username?: string) {
     this.username = username;
-    this.paired = !!this.username;
   }
 
   async attemptPairing(devicetype: string): Promise<Bridge | false> {
-    const res = await fetch(this.api, {
-      method: "POST",
-      timeout: 2500,
-      body: JSON.stringify({ devicetype })
-    });
-    const json = (await res.json())[0];
+    interface PairingResponse {
+      success?: {
+        username: string;
+      };
+      error?: any;
+    }
+
+    const json = (
+      await Bridge.query<PairingResponse[]>(this.api, Method.Post, {
+        devicetype
+      })
+    )[0];
 
     if (json.success) {
       this.username = json.success.username;
-      this.paired = true;
-
       return this;
     } else {
       return false;
@@ -87,29 +123,25 @@ export class Bridge {
   }
 
   async isPaired(): Promise<boolean> {
-    if (!this.isPaired) {
+    if (!this.username) {
       return false;
     }
 
-    const res = await fetch(`${this.api}/${this.username}/config`, {
-      method: "GET",
-      timeout: 2500
-    });
-    const json = await res.json();
+    const json = await Bridge.query<{ whitelist?: any }>(
+      `${this.api}/${this.username}/config`
+    );
 
     return !!json.whitelist;
   }
 
-  private async getObject<T>(object): Promise<T[]> {
+  private async getObject<T>(object: string): Promise<T[]> {
     if (!this.isPaired()) {
-      throw new Error(Bridge.CODES.NOT_PAIRED);
+      throw new Error(Code.NotPaired);
     }
 
-    const res = await fetch(`${this.api}/${this.username}/${object}`, {
-      method: "GET",
-      timeout: 2500
-    });
-    const json = await res.json();
+    const json = await Bridge.query<{ [key: string]: T }>(
+      `${this.api}/${this.username}/${object}`
+    );
 
     return Object.keys(json).map(key => ({ ...json[key], id: key }));
   }
@@ -127,12 +159,10 @@ export class Bridge {
   }
 
   async triggerScene(sceneId: string): Promise<void> {
-    const res = await fetch(`${this.api}/${this.username}/groups/0/action`, {
-      method: "PUT",
-      timeout: 2500,
-      body: JSON.stringify({ scene: sceneId })
-    });
-    const json = await res.json();
-    console.log(json);
+    return await Bridge.query(
+      `${this.api}/${this.username}/groups/0/action`,
+      Method.Put,
+      { scene: sceneId }
+    );
   }
 }
