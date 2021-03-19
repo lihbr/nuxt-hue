@@ -1,7 +1,8 @@
-import { NuxtHue, logger } from "../../utils";
-import { Command } from "./Command";
+import { NuxtHue } from "../../../core";
+import { logger } from "../../../utils";
+import { Command } from "../Command";
 
-export default {
+export const disable: Command = {
   name: "Disable",
   description: "Disable Nuxt Hue, you won't be cool anymore",
   usage: "disable",
@@ -9,4 +10,4 @@ export default {
     NuxtHue.disable();
     logger.success(`Nuxt Hue is now disabled`);
   }
-} as Command;
+};

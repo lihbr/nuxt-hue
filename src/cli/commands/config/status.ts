@@ -1,8 +1,9 @@
-import { NuxtHue, logger } from "../../utils";
-import pkg from "../../../package.json";
-import { Command } from "./Command";
+import pkg from "../../../../package.json";
+import { logger } from "../../../utils";
+import { Command } from "../Command";
+import { NuxtHue } from "../../../core";
 
-export default {
+export const status: Command = {
   name: "Status",
   description: "Check Nuxt Hue status",
   usage: "status",
@@ -16,11 +17,11 @@ export default {
     } else {
       logger.warn(
         `Nuxt Hue is ${
-          NuxtHue.isEnabled() ? "enabled" : "disabled"
-        } but not connected to a bridge\n\nConnect to one with:\n  $ ${
+          NuxtHue.isEnabled() ? "enabled but" : "disabled and"
+        } not connected to a bridge\n\nConnect to one with:\n  $ ${
           pkg.name
         } connect`
       );
     }
   }
-} as Command;
+};

@@ -1,12 +1,14 @@
 import defu from "defu";
 import { Module } from "@nuxt/types";
+import { NuxtHueConfig } from "./core";
 
-export interface ModuleOptions {}
-const DEFAULTS: ModuleOptions = {};
+const DEFAULTS: NuxtHueConfig = {};
 const CONFIG_KEY = "hue";
 
-const nuxtModule: Module<ModuleOptions> = function(moduleOptions) {
-  const options = defu<ModuleOptions, ModuleOptions>(
+const nuxtModule: Module<NuxtHueConfig> = function(
+  moduleOptions: NuxtHueConfig
+): void {
+  const options = defu<NuxtHueConfig, NuxtHueConfig>(
     this.options[CONFIG_KEY] || {},
     moduleOptions,
     DEFAULTS
@@ -18,10 +20,10 @@ const nuxtModule: Module<ModuleOptions> = function(moduleOptions) {
 
 declare module "@nuxt/types" {
   interface NuxtConfig {
-    [CONFIG_KEY]?: ModuleOptions;
+    [CONFIG_KEY]?: NuxtHueConfig;
   } // Nuxt 2.14+
   interface Configuration {
-    [CONFIG_KEY]?: ModuleOptions;
+    [CONFIG_KEY]?: NuxtHueConfig;
   } // Nuxt 2.9 - 2.13
 }
 

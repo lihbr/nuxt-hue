@@ -1,8 +1,11 @@
 import chalk from "chalk";
-import pkg from "../../../package.json";
-import { NuxtHue, logger } from "../../utils";
-import { Command } from "./Command";
-import commands from "./";
+import pkg from "../../../../package.json";
+import { logger } from "../../../utils";
+import { NuxtHue } from "../../../core";
+import { Command } from "../Command";
+import * as configCommands from "../config";
+import * as moduleCommands from "../module";
+import { version } from "./version";
 
 const SPACER = "__spacer";
 const ORDER: string[] = [
@@ -42,7 +45,7 @@ function getCommandHelp(
     .join(`\n    ${" ".repeat(Math.max(usageMaxLength, 0))}`)}`;
 }
 
-function getCommandsHelp(): string {
+function getCommandsHelp(commands: { [key: string]: Command }): string {
   const commandsHelp = [];
   const usageMaxLength = Math.max(
     ...Object.keys(commands).map(key => commands[key].usage.length)
@@ -69,11 +72,16 @@ function getCommandsHelp(): string {
   return commandsHelp.join("\n");
 }
 
-export default {
+export const help: Command = {
   name: "Help",
   description: `Display help for ${pkg.name}`,
   usage: "help, --help, -h",
   async run(): Promise<void> {
+    const miscCommands = {
+      version,
+      help: this
+    };
+
     const header = `💡 Nuxt Hue CLI\n${chalk.cyanBright(
       "Read the docs:"
     )} https://nuxt-hue.lihbr.com\n${chalk.yellowBright(
@@ -81,12 +89,16 @@ export default {
     )} https://lihbr.com — https://twitter.com/li_hbr`;
     const intro = "Nuxt Hue command line tool";
     const status = `STATUS\n  ${await getStatus()}`;
-    const version = `VERSION\n  ${pkg.name}@${pkg.version}`;
+    const meta = `VERSION\n  ${pkg.name}@${pkg.version}`;
     const usage = `USAGE\n  $ ${pkg.name} [COMMAND]`;
-    const commands = `COMMANDS\n${getCommandsHelp()}`;
+    const commands = `COMMANDS\n${getCommandsHelp({
+      ...configCommands,
+      ...moduleCommands,
+      ...miscCommands
+    })}`;
 
     logger.log(
-      `\n${[header, intro, status, version, usage, commands].join("\n\n")}\n`
+      `\n${[header, intro, status, meta, usage, commands].join("\n\n")}\n`
     );
   }
-} as Command;
+};

@@ -15,17 +15,21 @@
   "author": "Lucie Haberer <hello@lihbr.com> (https://lihbr.com)",
   "main": "dist/module.js",
   "types": "dist/module.d.ts",
-  "bin": "bin/nuxt-hue.js",
+  "bin": {
+    "nuxt-hue": "bin/cli.js"
+  },
   "files": [
     "bin",
     "dist"
   ],
   "scripts": {
     "build": "siroc build",
+    "build:watch": "siroc build --watch",
     "dev": "nuxt-ts example",
     "lint": "eslint --ext .js,.ts,.vue .",
-    "release": "yarn build && yarn test && standard-version && git push --follow-tags && npm publish",
-    "test": "yarn lint && jest"
+    "release": "yarn build && yarn test && standard-version && git push --follow-tags && yarn build && npm publish",
+    "test": "yarn lint && jest",
+    "postinstall": "node postinstall.js"
   },
   "husky": {
     "hooks": {
@@ -59,8 +63,9 @@
     "@siroc/jest-preset": "0.2.0",
     "@types/exit": "0.1.31",
     "@types/inquirer": "7.3.1",
-    "@types/jest": "26.0.20",
+    "@types/jest": "26.0.21",
     "@types/listr": "0.14.2",
+    "@types/node-fetch": "2.5.8",
     "@types/prompts": "2.0.9",
     "babel-eslint": "10.1.0",
     "babel-jest": "26.6.3",

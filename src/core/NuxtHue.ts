@@ -1,22 +1,22 @@
 import { NuxtOptionsModule } from "@nuxt/types/config/module";
 import * as rc from "rc9";
 import pkg from "../../package.json";
-import { Bridge } from "./Bridge";
+import { Bridge, Scene } from "./Bridge";
 
-enum Code {
+export enum NuxtHueCode {
   BridgeNotConfigured = "Bridge not Configured"
 }
 
-interface BridgeOptions {
-  ip?: string;
-  id?: string;
-  username?: string;
+export interface BridgeOptions {
+  ip: string;
+  id: string;
+  username: string;
 }
 
-interface ScenesOptions {
-  start: string;
-  error: string;
-  end: string;
+export interface ScenesOptions {
+  start: Pick<Scene, "id" | "name">;
+  error: Pick<Scene, "id" | "name">;
+  end: Pick<Scene, "id" | "name">;
 }
 
 export interface NuxtHueConfig {
@@ -139,6 +139,9 @@ export class NuxtHue {
     return !!config.buildModules?.find(i => i === pkg.name) ?? false;
   }
 
+  /**
+   * Check if Nuxt Hue has a bridge
+   */
   static hasBridge(): boolean {
     const { hue } = NuxtHue.read();
     return !!(
@@ -160,7 +163,7 @@ export class NuxtHue {
       const { ip, id, username } = hue.bridge;
       return new Bridge(ip, id, username);
     } else {
-      throw new Error(Code.BridgeNotConfigured);
+      throw new Error(NuxtHueCode.BridgeNotConfigured);
     }
   }
 
@@ -197,7 +200,7 @@ export class NuxtHue {
   /**
    * Update scenes options
    */
-  static updateScenes({ start, error, end }: ScenesOptions) {
+  static updateScenes({ start, error, end }: ScenesOptions): void {
     NuxtHue.update({
       hue: {
         scenes: {

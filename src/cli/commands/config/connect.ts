@@ -1,8 +1,10 @@
 import Listr, { ListrTaskWrapper } from "listr";
 import { Observable } from "rxjs";
-import { Bridge, NuxtHue, logger } from "../../utils";
-import pkg from "../../../package.json";
-import { Command } from "./Command";
+import exit from "exit";
+import pkg from "../../../../package.json";
+import { logger } from "../../../utils";
+import { Bridge, BridgeCode, NuxtHue } from "../../../core";
+import { Command } from "../Command";
 
 const DEVICE_TYPE = "nuxt-hue";
 
@@ -11,11 +13,7 @@ interface ConnectContext {
   pairedBridge: Bridge;
 }
 
-enum Code {
-  NoBridgeFound = "No Bridges Found"
-}
-
-export const tasks = new Listr([
+const tasks = new Listr([
   {
     title: "Discovering Bridges...",
     task: (ctx: ConnectContext, task: ListrTaskWrapper) =>
@@ -30,7 +28,7 @@ export const tasks = new Listr([
         ])
           .then(([bridges, _]) => {
             if (bridges.length === 0) {
-              observer.error(new Error(Code.NoBridgeFound));
+              observer.error(new Error(BridgeCode.NoBridgeFound));
             } else {
               if (bridges.length === 1) {
                 task.title = "One Bridge Found";
@@ -71,22 +69,46 @@ export const tasks = new Listr([
     title: "Saving Bridge...",
     task: (ctx: ConnectContext, task: ListrTaskWrapper) => {
       NuxtHue.updateBridge(ctx.pairedBridge);
-      task.title = "Bridge Added Successfully";
+      task.title = "Bridge saved";
     }
   }
 ]);
 
-export default {
-  name: "Setup",
-  description: `Connect to a bridge and select scenes Nuxt Hue\nneeds to trigger, useful after first installation`,
-  usage: "setup",
-  async run(): Promise<any> {
+export const connect: Command = {
+  name: "Connect",
+  description: "Connect to a new bridge",
+  usage: "connect",
+  async run(_, { programmatic = false } = {}): Promise<any> {
     try {
       await tasks.run();
+
+      if (!programmatic && !NuxtHue.isEnabled()) {
+        NuxtHue.enable();
+        logger
+          // @ts-ignore
+          .withDefaults({ badge: true })
+          .success(
+            "Connect setup completed successfully, Nuxt Hue has also been enabled"
+          );
+      } else {
+        logger
+          // @ts-ignore
+          .withDefaults({ badge: true })
+          .success("Connect setup completed successfully");
+      }
     } catch (error) {
-      logger.log(
-        `\n${error.message || error}, try again:\n\n  $ ${pkg.name} connect`
-      );
+      switch (error.message) {
+        case BridgeCode.NoBridgeFound:
+        case BridgeCode.PairingTimeout:
+          logger.error(
+            `${error.message}, try again:\n\n  $ ${pkg.name} ${this.usage}`
+          );
+          exit(1);
+          break;
+
+        default:
+          throw error;
+      }
     }
   }
-} as Command;
+};

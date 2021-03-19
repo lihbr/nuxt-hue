@@ -2,5 +2,10 @@ export interface Command {
   name: string;
   description: string;
   usage: string;
-  run: (args?: string[]) => Promise<void> | void;
+  run: (
+    args?: string[],
+    options?: {
+      programmatic?: boolean;
+    }
+  ) => Promise<void> | void;
 }

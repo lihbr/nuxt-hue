@@ -1,9 +1,12 @@
-// @ts-ignore-next-line
-import fetch from "node-fetch";
+import fetch, { RequestInit } from "node-fetch";
 
-enum Code {
+export enum BridgeCode {
+  NoBridgeFound = "No Bridges Found",
   PairingTimeout = "Pairing Timeout",
-  NotPaired = "Not Paired"
+  NotPaired = "Not Paired",
+  NoGroups = "No Groups Found",
+  NoScenes = "No Scenes Found",
+  NoScenesInGroup = "No Scenes Found in Group"
 }
 enum Method {
   Get = "GET",
@@ -38,7 +41,7 @@ export class Bridge {
     method: Method = Method.Get,
     body?: Body
   ): Promise<T> {
-    const options: { method: Method; timeout?: Number; body?: string } = {
+    const options: RequestInit = {
       method,
       timeout: Bridge.API_TIMEOUT
     };
@@ -84,19 +87,19 @@ export class Bridge {
           elapsed += 1000;
         } else {
           clearInterval(timer);
-          reject(new Error(Code.PairingTimeout));
+          reject(new Error(BridgeCode.PairingTimeout));
         }
       }, 1000);
     });
   }
 
-  username?: string;
+  username: string;
 
   get api(): string {
     return `http://${this.ip}/api`;
   }
 
-  constructor(public ip?: string, public id?: string, username?: string) {
+  constructor(public ip: string, public id: string, username: string = "") {
     this.username = username;
   }
 
@@ -136,7 +139,7 @@ export class Bridge {
 
   private async getObject<T>(object: string): Promise<T[]> {
     if (!this.isPaired()) {
-      throw new Error(Code.NotPaired);
+      throw new Error(BridgeCode.NotPaired);
     }
 
     const json = await Bridge.query<{ [key: string]: T }>(
