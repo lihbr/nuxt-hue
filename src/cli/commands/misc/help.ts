@@ -1,7 +1,7 @@
 import chalk from "chalk";
 import pkg from "../../../../package.json";
 import { logger } from "../../../utils";
-import { NuxtHue } from "../../../core";
+import { NuxtHue, NuxtHueCode } from "../../../core";
 import { Command } from "../Command";
 import * as configCommands from "../config";
 import * as moduleCommands from "../module";
@@ -23,14 +23,30 @@ const ORDER: string[] = [
 ];
 
 async function getStatus(): Promise<string> {
-  if (NuxtHue.hasBridge() && (await NuxtHue.isPaired())) {
-    return `Nuxt Hue is ${
-      NuxtHue.isEnabled() ? "enabled" : "disabled"
-    } and connected to a bridge (${NuxtHue.getBridge().ip})`;
-  } else {
-    return `Nuxt Hue is ${
-      NuxtHue.isEnabled() ? "enabled" : "disabled"
-    } but not connected to a bridge`;
+  switch (await NuxtHue.getStatus()) {
+    case NuxtHueCode.Ok:
+      return `Nuxt Hue is ${
+        NuxtHue.isEnabled() ? "enabled" : "disabled"
+      }, connected to a bridge (${
+        NuxtHue.getBridge().ip
+      }), and has scenes configured`;
+
+    case NuxtHueCode.BridgeAndScenesNotConfigured:
+      return "Nuxt Hue is not setup";
+
+    case NuxtHueCode.BridgeNotConfigured:
+      return `Nuxt Hue is ${
+        NuxtHue.isEnabled() ? "enabled but" : "disabled and"
+      } not connected to a bridge`;
+
+    case NuxtHueCode.ScenesNotConfigured:
+      return `Nuxt Hue is ${
+        NuxtHue.isEnabled() ? "enabled" : "disabled"
+      } and connected to a bridge but scenes are not configured`;
+
+    case NuxtHueCode.Unknown:
+    default:
+      return "Nuxt Hue status is unknown, this should not happen";
   }
 }
 

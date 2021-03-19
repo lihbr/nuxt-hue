@@ -5,6 +5,7 @@ import pkg from "../../../../package.json";
 import { logger } from "../../../utils";
 import { Group, NuxtHue, ScenesOptions } from "../../../core";
 import { Command } from "../Command";
+import { connect } from "./connect";
 
 interface Answers {
   group: Group;
@@ -19,7 +20,7 @@ export const scenes: Command = {
     // Check bridge connexion
     if (!NuxtHue.hasBridge() || !NuxtHue.isPaired()) {
       logger.error(
-        `Nuxt Hue not connected to a bridge\n\nConnect to one first with:\n  $ ${pkg.name} connect`
+        `Nuxt Hue not connected to a bridge\n\nConnect to one first with:\n  $ ${pkg.name} ${connect.usage}`
       );
       exit(1);
       return;

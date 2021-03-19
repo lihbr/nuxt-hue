@@ -25,7 +25,7 @@
   "scripts": {
     "build": "siroc build",
     "build:watch": "siroc build --watch",
-    "dev": "nuxt-ts example",
+    "dev": "nuxt example",
     "lint": "eslint --ext .js,.ts,.vue .",
     "release": "yarn build && yarn test && standard-version && git push --follow-tags && yarn build && npm publish",
     "test": "yarn lint && jest",
@@ -58,7 +58,6 @@
     "@commitlint/config-conventional": "12.0.1",
     "@nuxt/test-utils": "0.2.0",
     "@nuxt/types": "2.15.3",
-    "@nuxt/typescript-runtime": "2.1.0",
     "@nuxtjs/eslint-config-typescript": "6.0.0",
     "@siroc/jest-preset": "0.2.0",
     "@types/exit": "0.1.31",

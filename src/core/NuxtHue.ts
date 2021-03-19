@@ -4,7 +4,11 @@ import pkg from "../../package.json";
 import { Bridge, Scene } from "./Bridge";
 
 export enum NuxtHueCode {
-  BridgeNotConfigured = "Bridge not Configured"
+  Ok = "Ok",
+  BridgeAndScenesNotConfigured = "Bridge and Scenes Are Not Configured",
+  BridgeNotConfigured = "Bridge Not Configured",
+  ScenesNotConfigured = "Scenes Not Configured",
+  Unknown = "Unknown"
 }
 
 export interface BridgeOptions {
@@ -20,11 +24,13 @@ export interface ScenesOptions {
 }
 
 export interface NuxtHueConfig {
+  bridge?: BridgeOptions;
+  scenes?: ScenesOptions;
+}
+
+export interface NuxtHueConfigRC {
   buildModules?: NuxtOptionsModule[];
-  hue?: {
-    bridge?: BridgeOptions;
-    scenes?: ScenesOptions;
-  };
+  hue?: NuxtHueConfig;
 }
 
 export class NuxtHue {
@@ -33,21 +39,21 @@ export class NuxtHue {
   /**
    * Read config file
    */
-  static read(): NuxtHueConfig {
+  static read(): NuxtHueConfigRC {
     return rc.readUser(NuxtHue.RCFILE);
   }
 
   /**
    * Write config file
    */
-  private static write(config: NuxtHueConfig): void {
+  private static write(config: NuxtHueConfigRC): void {
     rc.writeUser(config, NuxtHue.RCFILE);
   }
 
   /**
    * Update config file
    */
-  private static update(config: NuxtHueConfig): void {
+  private static update(config: NuxtHueConfigRC): void {
     rc.updateUser(config, NuxtHue.RCFILE);
   }
 
@@ -142,8 +148,11 @@ export class NuxtHue {
   /**
    * Check if Nuxt Hue has a bridge
    */
-  static hasBridge(): boolean {
-    const { hue } = NuxtHue.read();
+  static hasBridge(hue?: NuxtHueConfig): boolean {
+    if (!hue) {
+      hue = NuxtHue.read().hue;
+    }
+
     return !!(
       hue &&
       hue.bridge &&
@@ -153,11 +162,54 @@ export class NuxtHue {
     );
   }
 
+  static hasScenes(hue?: NuxtHueConfig): boolean {
+    if (!hue) {
+      hue = NuxtHue.read().hue;
+    }
+
+    return !!(
+      hue &&
+      hue.scenes &&
+      hue.scenes.start &&
+      hue.scenes.start.id &&
+      hue.scenes.start.name &&
+      hue.scenes.error &&
+      hue.scenes.error.id &&
+      hue.scenes.error.name &&
+      hue.scenes.end &&
+      hue.scenes.end.id &&
+      hue.scenes.end.name
+    );
+  }
+
+  static async getStatus(hue?: NuxtHueConfig): Promise<string> {
+    if (!hue) {
+      hue = NuxtHue.read().hue;
+    }
+
+    const bridgeOk = NuxtHue.hasBridge() && (await NuxtHue.isPaired());
+    const scenesOk = NuxtHue.hasScenes();
+
+    if (bridgeOk && scenesOk) {
+      return NuxtHueCode.Ok;
+    } else if (!bridgeOk && !scenesOk) {
+      return NuxtHueCode.BridgeAndScenesNotConfigured;
+    } else if (!bridgeOk) {
+      return NuxtHueCode.BridgeNotConfigured;
+    } else if (!scenesOk) {
+      return NuxtHueCode.ScenesNotConfigured;
+    } else {
+      return NuxtHueCode.Unknown;
+    }
+  }
+
   /**
    * Get currently configured bridge
    */
-  static getBridge(): Bridge {
-    const { hue } = NuxtHue.read();
+  static getBridge(hue?: NuxtHueConfig): Bridge {
+    if (!hue) {
+      hue = NuxtHue.read().hue;
+    }
 
     if (hue && hue.bridge) {
       const { ip, id, username } = hue.bridge;
