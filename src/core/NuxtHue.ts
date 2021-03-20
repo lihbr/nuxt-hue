@@ -1,8 +1,12 @@
 import path from "path";
 import { NuxtOptionsModule } from "@nuxt/types/config/module";
 import * as rc from "rc9";
+import env from "std-env";
 import pkg from "../../package.json";
 import { Bridge, Scene } from "./Bridge";
+
+const packageRoot = path.join(__dirname, "..");
+const packageFolder = env.windows ? pkg.name.replace(/\//g, "\\") : pkg.name;
 
 export interface BridgeOptions {
   ip: string;
@@ -63,13 +67,11 @@ export function update(config: ConfigRC): void {
  * Remove everything Nuxt Hue related from config file
  */
 export function wipe(): void {
+  disable();
+
   const config = read();
 
   delete config.hue;
-  config.buildModules = config.buildModules?.filter(i => i !== pkg.name) ?? [];
-  if (!config.buildModules.length) {
-    delete config.buildModules;
-  }
 
   write(config);
 }
@@ -106,21 +108,16 @@ export function wipeScenes(): void {
   write(config);
 }
 
-export function getPackageRoot(): string {
-  return path.join(__dirname, "..");
-}
-
 /**
  * Enable Nuxt Hue module
  */
 export function enable(): void {
   const config = read();
-  const packageRoot = getPackageRoot();
 
   if (config.buildModules) {
     if (
       !config.buildModules.find(
-        i => typeof i === "string" && i.endsWith(pkg.name)
+        i => typeof i === "string" && i.endsWith(packageFolder)
       )
     ) {
       config.buildModules.push(packageRoot);
@@ -140,7 +137,7 @@ export function disable(): void {
 
   config.buildModules =
     config.buildModules?.filter(
-      i => !(typeof i === "string" && i.endsWith(pkg.name))
+      i => !(typeof i === "string" && i.endsWith(packageFolder))
     ) ?? [];
   if (!config.buildModules.length) {
     delete config.buildModules;
@@ -157,7 +154,7 @@ export function isEnabled(): boolean {
 
   return (
     !!config.buildModules?.find(
-      i => typeof i === "string" && i.endsWith(pkg.name)
+      i => typeof i === "string" && i.endsWith(packageFolder)
     ) ?? false
   );
 }

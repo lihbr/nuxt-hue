@@ -20,7 +20,8 @@
   },
   "files": [
     "bin",
-    "dist"
+    "dist",
+    "postinstall.js"
   ],
   "scripts": {
     "build": "siroc build",
@@ -47,7 +48,8 @@
     "listr": "0.14.3",
     "node-fetch": "2.6.1",
     "rc9": "1.2.0",
-    "rxjs": "6.6.6"
+    "rxjs": "6.6.6",
+    "std-env": "2.3.0"
   },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "7.13.10",
@@ -76,8 +78,7 @@
     "standard-version": "9.1.1"
   },
   "engines": {
-    "node": ">=12.18.0",
-    "yarn": ">=1.22.0"
+    "node": ">=12.0.0"
   },
   "publishConfig": {
     "access": "public"
