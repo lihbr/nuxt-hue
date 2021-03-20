@@ -106,7 +106,7 @@ export const connect: Command = {
         case BridgeCode.NoBridgeFound:
         case BridgeCode.PairingTimeout:
           logger.error(
-            `${error.message}, try again:\n\n  $ ${NuxtHue.CLI} ${this.usage}`
+            `${error.message}, try again:\n\n  $ ${NuxtHue.CLI_COMMAND} ${this.usage}`
           );
           exit(1);
           break;

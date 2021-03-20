@@ -33,29 +33,29 @@ export enum Code {
   Unknown = "Unknown"
 }
 
-export const RCFILE = ".nuxtrc";
+export const RC_FILE = ".nuxtrc";
 
-export const CLI = "nuxt-hue";
+export const CLI_COMMAND = "nuxt-hue";
 
 /**
  * Read config file
  */
 export function read(): ConfigRC {
-  return rc.readUser(RCFILE);
+  return rc.readUser(RC_FILE);
 }
 
 /**
  * Write config file
  */
 export function write(config: ConfigRC): void {
-  rc.writeUser(config, RCFILE);
+  rc.writeUser(config, RC_FILE);
 }
 
 /**
  * Update config file
  */
 export function update(config: ConfigRC): void {
-  rc.updateUser(config, RCFILE);
+  rc.updateUser(config, RC_FILE);
 }
 
 /**
@@ -239,17 +239,21 @@ export async function getFormattedStatus(
 
     case Code.BridgeAndScenesNotConfigured:
       maybeHint += withHint
-        ? `Run the setup wizard with:\n  $ ${CLI} setup`
+        ? `Run the setup wizard with:\n  $ ${CLI_COMMAND} setup`
         : "";
       // Never display module status as it's not relevant here
       return `Nuxt Hue is not setup${maybeHint}`;
 
     case Code.BridgeNotConfigured:
-      maybeHint += withHint ? `Connect to one with:\n  $ ${CLI} connect` : "";
+      maybeHint += withHint
+        ? `Connect to one with:\n  $ ${CLI_COMMAND} connect`
+        : "";
       return `Nuxt Hue is${maybeModuleWithConjunction} not connected to a bridge${maybeHint}`;
 
     case Code.ScenesNotConfigured:
-      maybeHint += withHint ? `Configure them with:\n  $ ${CLI} scenes` : "";
+      maybeHint += withHint
+        ? `Configure them with:\n  $ ${CLI_COMMAND} scenes`
+        : "";
       return `Nuxt Hue is${maybeModule}${
         withModule ? " and" : ""
       } connected to a bridge but scenes are not configured${maybeHint}`;
@@ -257,7 +261,7 @@ export async function getFormattedStatus(
     case Code.Unknown:
     default:
       maybeHint += withHint
-        ? `Try running the setup wizard with:\n  $ ${CLI} setup`
+        ? `Try running the setup wizard with:\n  $ ${CLI_COMMAND} setup`
         : "";
       // Never display module status as it's not relevant here
       return `Nuxt Hue status is unknown, this should not happen${maybeHint}`;

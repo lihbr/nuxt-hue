@@ -84,7 +84,7 @@ export const help: Command = {
       withHint: false
     })}`;
     const meta = `VERSION\n  ${pkg.name}@${pkg.version}`;
-    const usage = `USAGE\n  $ ${NuxtHue.CLI} [COMMAND]`;
+    const usage = `USAGE\n  $ ${NuxtHue.CLI_COMMAND} [COMMAND]`;
     const commands = `COMMANDS\n${getCommandsHelp({
       ...configCommands,
       ...moduleCommands,

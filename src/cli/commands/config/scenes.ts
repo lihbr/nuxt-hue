@@ -19,7 +19,7 @@ export const scenes: Command = {
     // Check bridge connexion
     if (!NuxtHue.hasBridge() || !(await NuxtHue.isPaired())) {
       logger.error(
-        `Nuxt Hue not connected to a bridge\n\nConnect to one first with:\n  $ ${NuxtHue.CLI} ${connect.usage}`
+        `Nuxt Hue not connected to a bridge\n\nConnect to one first with:\n  $ ${NuxtHue.CLI_COMMAND} ${connect.usage}`
       );
       exit(1);
       return;
@@ -36,7 +36,7 @@ export const scenes: Command = {
       logger.error(
         `No ${!groups.length ? "groups" : "scenes"} found for current bridge (${
           bridge.ip
-        }), try again:\n\n  $ ${NuxtHue.CLI} ${this.usage}`
+        }), try again:\n\n  $ ${NuxtHue.CLI_COMMAND} ${this.usage}`
       );
       exit(1);
       return;
@@ -118,7 +118,7 @@ export const scenes: Command = {
     // No scenes in chosen group
     if (!when(answers)) {
       logger.error(
-        `No scenes found in group: ${answers.group.name}, try again:\n\n  $ ${NuxtHue.CLI} ${this.usage}`
+        `No scenes found in group: ${answers.group.name}, try again:\n\n  $ ${NuxtHue.CLI_COMMAND} ${this.usage}`
       );
       exit(1);
       return;
