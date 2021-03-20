@@ -1,18 +1,12 @@
 import exit from "exit";
 import commands from "./cli/commands";
 import { logger } from "./utils";
+import { pascalCase } from "./utils/pascalCase";
 
 async function run() {
   const [command, ...args] = process.argv.slice(2);
 
-  const cmd =
-    commands[
-      command
-        .toLowerCase()
-        .split("-")
-        .map((s, i) => (i === 0 ? s : `${s[0].toUpperCase()}${s.slice(1)}`))
-        .join("")
-    ];
+  const cmd = commands[pascalCase(command)];
   if (cmd) {
     await cmd.run(args);
   } else {
