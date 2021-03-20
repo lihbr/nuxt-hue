@@ -1,3 +1,4 @@
+import path from "path";
 import { NuxtOptionsModule } from "@nuxt/types/config/module";
 import * as rc from "rc9";
 import pkg from "../../package.json";
@@ -105,18 +106,27 @@ export function wipeScenes(): void {
   write(config);
 }
 
+export function getPackageRoot(): string {
+  return path.join(__dirname, "..");
+}
+
 /**
  * Enable Nuxt Hue module
  */
 export function enable(): void {
   const config = read();
+  const packageRoot = getPackageRoot();
 
   if (config.buildModules) {
-    if (!config.buildModules.find(i => i === pkg.name)) {
-      config.buildModules.push(pkg.name);
+    if (
+      !config.buildModules.find(
+        i => typeof i === "string" && i.endsWith(pkg.name)
+      )
+    ) {
+      config.buildModules.push(packageRoot);
     }
   } else {
-    config.buildModules = [pkg.name];
+    config.buildModules = [packageRoot];
   }
 
   write(config);
@@ -128,7 +138,10 @@ export function enable(): void {
 export function disable(): void {
   const config = read();
 
-  config.buildModules = config.buildModules?.filter(i => i !== pkg.name) ?? [];
+  config.buildModules =
+    config.buildModules?.filter(
+      i => !(typeof i === "string" && i.endsWith(pkg.name))
+    ) ?? [];
   if (!config.buildModules.length) {
     delete config.buildModules;
   }
@@ -141,7 +154,12 @@ export function disable(): void {
  */
 export function isEnabled(): boolean {
   const config = read();
-  return !!config.buildModules?.find(i => i === pkg.name) ?? false;
+
+  return (
+    !!config.buildModules?.find(
+      i => typeof i === "string" && i.endsWith(pkg.name)
+    ) ?? false
+  );
 }
 
 /**
