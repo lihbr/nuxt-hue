@@ -1,19 +1,5 @@
 import fetch, { RequestInit } from "node-fetch";
-
-export enum BridgeCode {
-  NoBridgeFound = "No Bridges Found",
-  PairingTimeout = "Pairing Timeout",
-  NotPaired = "Not Paired",
-  NoGroups = "No Groups Found",
-  NoScenes = "No Scenes Found",
-  NoScenesInGroup = "No Scenes Found in Group"
-}
-enum Method {
-  Get = "GET",
-  Post = "POST",
-  Put = "PUT",
-  Delete = "DELETE"
-}
+import execa from "execa";
 
 export interface Group {
   id: string;
@@ -26,6 +12,22 @@ export interface Scene {
   name: string;
   group: string;
   type: string;
+}
+
+export enum Code {
+  NoBridgeFound = "No Bridges Found",
+  PairingTimeout = "Pairing Timeout",
+  NotPaired = "Not Paired",
+  NoGroups = "No Groups Found",
+  NoScenes = "No Scenes Found",
+  NoScenesInGroup = "No Scenes Found in Group"
+}
+
+enum Method {
+  Get = "GET",
+  Post = "POST",
+  Put = "PUT",
+  Delete = "DELETE"
 }
 
 export class Bridge {
@@ -87,7 +89,7 @@ export class Bridge {
           elapsed += 1000;
         } else {
           clearInterval(timer);
-          reject(new Error(BridgeCode.PairingTimeout));
+          reject(new Error(Code.PairingTimeout));
         }
       }, 1000);
     });
@@ -139,7 +141,7 @@ export class Bridge {
 
   private async getObject<T>(object: string): Promise<T[]> {
     if (!this.isPaired()) {
-      throw new Error(BridgeCode.NotPaired);
+      throw new Error(Code.NotPaired);
     }
 
     const json = await Bridge.query<{ [key: string]: T }>(
@@ -161,11 +163,27 @@ export class Bridge {
     );
   }
 
-  async triggerScene(sceneId: string): Promise<void> {
+  async triggerScene(sceneId?: string): Promise<void> {
+    if (!sceneId) {
+      return;
+    }
+
     return await Bridge.query(
       `${this.api}/${this.username}/groups/0/action`,
       Method.Put,
       { scene: sceneId }
     );
+  }
+
+  triggerSceneExec(sceneId?: string): void {
+    if (!sceneId) {
+      return;
+    }
+
+    try {
+      execa.sync("nuxt-hue", ["trigger-scene", sceneId]);
+    } catch (error) {
+      // Fail silently
+    }
   }
 }

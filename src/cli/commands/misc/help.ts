@@ -1,7 +1,7 @@
 import chalk from "chalk";
 import pkg from "../../../../package.json";
 import { logger } from "../../../utils";
-import { NuxtHue, NuxtHueCode } from "../../../core";
+import * as NuxtHue from "../../../core/NuxtHue";
 import { Command } from "../Command";
 import * as configCommands from "../config";
 import * as moduleCommands from "../module";
@@ -18,37 +18,12 @@ const ORDER: string[] = [
   "enable",
   "disable",
   SPACER,
+  "wipe",
+  "triggerScene",
+  SPACER,
   "help",
   "version"
 ];
-
-async function getStatus(): Promise<string> {
-  switch (await NuxtHue.getStatus()) {
-    case NuxtHueCode.Ok:
-      return `Nuxt Hue is ${
-        NuxtHue.isEnabled() ? "enabled" : "disabled"
-      }, connected to a bridge (${
-        NuxtHue.getBridge().ip
-      }), and has scenes configured`;
-
-    case NuxtHueCode.BridgeAndScenesNotConfigured:
-      return "Nuxt Hue is not setup";
-
-    case NuxtHueCode.BridgeNotConfigured:
-      return `Nuxt Hue is ${
-        NuxtHue.isEnabled() ? "enabled but" : "disabled and"
-      } not connected to a bridge`;
-
-    case NuxtHueCode.ScenesNotConfigured:
-      return `Nuxt Hue is ${
-        NuxtHue.isEnabled() ? "enabled" : "disabled"
-      } and connected to a bridge but scenes are not configured`;
-
-    case NuxtHueCode.Unknown:
-    default:
-      return "Nuxt Hue status is unknown, this should not happen";
-  }
-}
 
 function getCommandHelp(
   { description, usage }: Command,
@@ -104,9 +79,12 @@ export const help: Command = {
       "More from Lucie:"
     )} https://lihbr.com — https://twitter.com/li_hbr`;
     const intro = "Nuxt Hue command line tool";
-    const status = `STATUS\n  ${await getStatus()}`;
+    const status = `STATUS\n  ${await NuxtHue.getFormattedStatus(undefined, {
+      withModule: true,
+      withHint: false
+    })}`;
     const meta = `VERSION\n  ${pkg.name}@${pkg.version}`;
-    const usage = `USAGE\n  $ ${pkg.name} [COMMAND]`;
+    const usage = `USAGE\n  $ ${NuxtHue.CLI} [COMMAND]`;
     const commands = `COMMANDS\n${getCommandsHelp({
       ...configCommands,
       ...moduleCommands,

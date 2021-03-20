@@ -3,9 +3,16 @@ import commands from "./cli/commands";
 import { logger } from "./utils";
 
 async function run() {
-  const [command, ...args] = process.argv.slice(2).map(i => i.toLowerCase());
+  const [command, ...args] = process.argv.slice(2);
 
-  const cmd = commands[command];
+  const cmd =
+    commands[
+      command
+        .toLowerCase()
+        .split("-")
+        .map((s, i) => (i === 0 ? s : `${s[0].toUpperCase()}${s.slice(1)}`))
+        .join("")
+    ];
   if (cmd) {
     await cmd.run(args);
   } else {
@@ -28,5 +35,3 @@ run().catch(error => {
   logger.fatal(error);
   exit(2);
 });
-
-// https://github1s.com/elgatosf/streamdeck-philipshue/blob/master/Sources/com.elgato.philips-hue.sdPlugin/pi/js/scenePI.js

@@ -1,4 +1,4 @@
-import { NuxtHue } from "../../../core";
+import * as NuxtHue from "../../../core/NuxtHue";
 import { logger } from "../../../utils";
 import { Command } from "../Command";
 

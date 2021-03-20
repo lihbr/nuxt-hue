@@ -1,6 +1,6 @@
 {
-  "name": "nuxt-hue",
-  "version": "0.0.0",
+  "name": "@lihbr/nuxt-hue",
+  "version": "0.0.1-alpha.0",
   "description": "Enlight your Nuxt experience",
   "keywords": [
     "nuxt",
@@ -9,7 +9,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "ssh://git@github.com/lihbr/nuxt-ackee.git"
+    "url": "ssh://git@github.com/lihbr/nuxt-hue.git"
   },
   "license": "MIT",
   "author": "Lucie Haberer <hello@lihbr.com> (https://lihbr.com)",
@@ -24,7 +24,6 @@
   ],
   "scripts": {
     "build": "siroc build",
-    "build:watch": "siroc build --watch",
     "dev": "nuxt example",
     "lint": "eslint --ext .js,.ts,.vue .",
     "release": "yarn build && yarn test && standard-version && git push --follow-tags && yarn build && npm publish",
@@ -38,15 +37,15 @@
     }
   },
   "dependencies": {
+    "@lihbr/listr-update-renderer": "0.5.1",
     "chalk": "4.1.0",
     "consola": "2.15.3",
     "defu": "3.2.2",
+    "execa": "5.0.0",
     "exit": "0.1.2",
     "inquirer": "8.0.0",
     "listr": "0.14.3",
-    "minimist": "1.2.5",
     "node-fetch": "2.6.1",
-    "prompts": "2.4.0",
     "rc9": "1.2.0",
     "rxjs": "6.6.6"
   },
@@ -65,7 +64,6 @@
     "@types/jest": "26.0.21",
     "@types/listr": "0.14.2",
     "@types/node-fetch": "2.5.8",
-    "@types/prompts": "2.0.9",
     "babel-eslint": "10.1.0",
     "babel-jest": "26.6.3",
     "eslint": "7.22.0",
@@ -82,6 +80,7 @@
     "yarn": ">=1.22.0"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://npm.pkg.github.com"
   }
 }
