@@ -9,7 +9,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "ssh://git@github.com/lihbr/nuxt-ackee.git"
+    "url": "ssh://git@github.com/lihbr/nuxt-hue.git"
   },
   "license": "MIT",
   "author": "Lucie Haberer <hello@lihbr.com> (https://lihbr.com)",
