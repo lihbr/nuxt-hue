@@ -1,12 +1,11 @@
 import exit from "exit";
 import commands from "./cli/commands";
-import { logger } from "./utils";
-import { pascalCase } from "./utils/pascalCase";
+import { logger, kebabTopascalCase } from "./utils";
 
 async function run() {
   const [command, ...args] = process.argv.slice(2);
 
-  const cmd = commands[pascalCase(command)];
+  const cmd = commands[kebabTopascalCase(command)];
   if (cmd) {
     await cmd.run(args);
   } else {

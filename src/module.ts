@@ -7,7 +7,7 @@ import { logger } from "./utils";
 const DEFAULTS: NuxtHue.Config = {};
 const CONFIG_KEY = "hue";
 
-const nuxtModule: Module<NuxtHue.Config> = async function(
+const nuxtModule: Module<NuxtHue.Config> = async function (
   moduleOptions: NuxtHue.Config
 ): Promise<void> {
   const options = defu<NuxtHue.Config, NuxtHue.Config>(
