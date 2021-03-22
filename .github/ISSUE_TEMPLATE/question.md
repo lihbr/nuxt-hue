@@ -1,9 +1,9 @@
 ---
 name: Question
 about: Ask a question about the module.
-title: ''
+title: ""
 labels: question
-assignees: ''
+assignees: ""
 ---
 
 <!--

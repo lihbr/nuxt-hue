@@ -23,6 +23,6 @@
 *.pyc binary
 *.pdf binary
 
-# ...and don't care about lock file that much
+# ...and don't care about lock files that much
 package-lock.json -diff
 yarn.lock -diff
