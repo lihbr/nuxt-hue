@@ -44,12 +44,15 @@ const nuxtModule: Module<NuxtHue.Config> = async function(
 
   // Basic hooks
   this.nuxt.hook("ready", () => {
+    logger.info("ready");
     bridge.triggerScene(options.scenes?.start.id);
   });
   this.nuxt.hook("error", () => {
+    logger.info("error");
     bridge.triggerScene(options.scenes?.error.id);
   });
   this.nuxt.hook("close", () => {
+    logger.info("close");
     bridge.triggerScene(options.scenes?.end.id);
   });
 
@@ -62,35 +65,43 @@ const nuxtModule: Module<NuxtHue.Config> = async function(
   this.nuxt.hook("bundler:error", () => {
     hasBundlerError = true;
     hasBundlerChanges = true;
+    logger.info("bundler:error");
     bridge.triggerScene(options.scenes?.error.id);
   });
   this.nuxt.hook("bundler:done", () => {
     if (!hasBundlerError && hasBundlerChanges) {
       hasBundlerChanges = false;
+      logger.info("bundler:done");
       bridge.triggerScene(options.scenes?.start.id);
     }
   });
 
   // Process exit hook
-  process.on("exit", () => {
-    bridge.triggerSceneExec(options.scenes?.end.id);
-  });
-  process.once("SIGINT", () => {
-    bridge.triggerSceneExec(options.scenes?.end.id);
-    exit(128 + 2);
-  });
-  process.once("SIGTERM", () => {
-    bridge.triggerSceneExec(options.scenes?.end.id);
-    exit(128 + 15);
-  });
-  process.once("uncaughtException", () => {
-    bridge.triggerSceneExec(options.scenes?.error.id);
-    exit(2);
-  });
+  let exited = false;
+  function exitHandler(signal: number, shouldExit = false) {
+    if (exited) {
+      return;
+    }
+
+    exited = true;
+
+    if ([1, 2].includes(signal)) {
+      bridge.triggerSceneExec(options.scenes?.error.id);
+    } else {
+      bridge.triggerSceneExec(options.scenes?.end.id);
+    }
+
+    if (shouldExit) {
+      exit(signal);
+    }
+  }
+  process.once("exit", exitHandler);
+  process.once("SIGINT", exitHandler.bind(null, 128 + 2, true));
+  process.once("SIGTERM", exitHandler.bind(null, 128 + 15, true));
 
   // Activate start scene
   await bridge.triggerScene(options.scenes?.start.id);
-  logger.info("💡 Nuxt Hue is running~");
+  logger.log("💡 Nuxt Hue is running~");
 };
 (nuxtModule as any).meta = require("../package.json");
 

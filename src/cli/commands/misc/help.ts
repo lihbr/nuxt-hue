@@ -5,6 +5,7 @@ import * as NuxtHue from "../../../core/NuxtHue";
 import { Command } from "../Command";
 import * as configCommands from "../config";
 import * as moduleCommands from "../module";
+import * as internalCommands from "../internal";
 import { version } from "./version";
 
 const SPACER = "__spacer";
@@ -88,6 +89,7 @@ export const help: Command = {
     const commands = `COMMANDS\n${getCommandsHelp({
       ...configCommands,
       ...moduleCommands,
+      ...internalCommands,
       ...miscCommands
     })}`;
 

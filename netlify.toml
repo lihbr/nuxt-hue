@@ -14,6 +14,8 @@
 # Enforce yarn
 [build.environment]
   NETLIFY_USE_YARN = "true"
+  NODE_VERSION = "14.16.0"
+  YARN_VERSION = "1.22.10"
 
 # Post processing configuration
 [build.processing]
@@ -49,6 +51,12 @@
 
 [[redirects]]
   from = "https://nuxt-hue.netlify.app/*"
+  to = "https://nuxt-hue.lihbr.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://nuxt-hue.lucie.red/*"
   to = "https://nuxt-hue.lihbr.com/:splat"
   status = 301
   force = true

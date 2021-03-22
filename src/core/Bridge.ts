@@ -1,5 +1,6 @@
 import fetch, { RequestInit } from "node-fetch";
 import execa from "execa";
+import { logger } from "../utils";
 
 export interface Group {
   id: string;
@@ -33,7 +34,7 @@ enum Method {
 export class Bridge {
   static HUE_DISCOVERY = "https://discovery.meethue.com";
   static PAIRING_TIMEOUT = 45000;
-  static API_TIMEOUT = 3000;
+  static API_TIMEOUT = 6000;
 
   /**
    * Query MeetHue API
@@ -163,19 +164,30 @@ export class Bridge {
     );
   }
 
-  async triggerScene(sceneId?: string): Promise<void> {
+  async triggerScene(
+    sceneId?: string,
+    failGracefully: boolean = true
+  ): Promise<void> {
     if (!sceneId) {
       return;
     }
 
-    return await Bridge.query(
-      `${this.api}/${this.username}/groups/0/action`,
-      Method.Put,
-      { scene: sceneId }
-    );
+    try {
+      await Bridge.query(
+        `${this.api}/${this.username}/groups/0/action`,
+        Method.Put,
+        { scene: sceneId }
+      );
+    } catch (error) {
+      if (failGracefully) {
+        logger.warn(error);
+      } else {
+        throw error;
+      }
+    }
   }
 
-  triggerSceneExec(sceneId?: string): void {
+  triggerSceneExec(sceneId?: string, failGracefully: boolean = true): void {
     if (!sceneId) {
       return;
     }
@@ -183,7 +195,11 @@ export class Bridge {
     try {
       execa.sync("nuxt-hue", ["trigger-scene", sceneId]);
     } catch (error) {
-      // Fail silently
+      if (failGracefully) {
+        logger.warn(error);
+      } else {
+        throw error;
+      }
     }
   }
 }

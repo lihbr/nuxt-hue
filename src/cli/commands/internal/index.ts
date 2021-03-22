@@ -1,0 +1,1 @@
+export { triggerScene } from "./triggerScene";

@@ -5,11 +5,13 @@ export const triggerScene: Command = {
   name: "Trigger scene",
   description: `[INTERNAL] Trigger a specific scene`,
   usage: "trigger-scene <SCENEID>",
-  async run(args = []): Promise<void> {
+  run(args = []): void {
     const sceneId = args[0];
 
-    if (NuxtHue.hasBridge() && (await NuxtHue.isPaired())) {
-      await NuxtHue.getBridge().triggerScene(sceneId);
+    try {
+      NuxtHue.getBridge().triggerScene(sceneId);
+    } catch (error) {
+      // Fail silently
     }
   }
 };
