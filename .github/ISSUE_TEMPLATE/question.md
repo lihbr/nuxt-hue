@@ -4,7 +4,6 @@ about: Ask a question about the module.
 title: ''
 labels: question
 assignees: ''
-
 ---
 
 <!--
@@ -12,9 +11,9 @@ assignees: ''
  **IMPORTANT!**
 Please make sure to look for an answer to your question in our documentation before asking a question here.
 
-If you have a general question regarding {{ name }} use Discord `modules` channel. Thanks!
+If you have a general question regarding Nuxt Hue use Discord `modules` channel. Thanks!
 
-Documentation: {{ docs }}
-Nuxt Discord: https://discord.nuxtjs.org/
+Documentation: https://nuxt-hue.lihbr.com
+Nuxt Discord: https://discord.nuxtjs.org
 
 -->

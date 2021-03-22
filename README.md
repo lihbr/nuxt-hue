@@ -8,34 +8,32 @@
 [![Codecov](./docs/static/coverage.svg)][codecov-href]
 [![License][license-src]][license-href]
 
-[📖 **Release Notes**](./CHANGELOG.md)
+> Enlight your Nuxt experience
+
+- [✨ &nbsp;Release Notes](/CHANGELOG.md)
+- [📖 &nbsp;Read the documentation](https://nuxt-hue.lihbr.com)
 
 ## Setup
 
-1. Add `nuxt-hue` dependency to your project
+1. Add `nuxt-hue` dependency globally
 
 ```bash
-yarn add nuxt-hue # or npm install nuxt-hue
+yarn global add nuxt-hue # or npm install --global nuxt-hue
 ```
 
-2. Add `nuxt-hue` to the `modules` section of `nuxt.config.js`
+2. Run the setup command and let the wizard guide you through
 
-```js
-{
-  modules: [
-    'nuxt-hue',
-  ],
-  hue: {
-    // module options
-  }
-}
+```bash
+nuxt-hue setup
 ```
+
+You're done! Start developing with Nuxt and enjoy!
 
 ## Development
 
 1. Clone this repository
 2. Install dependencies using `yarn install`
-3. Start development server using `yarn dev`
+3. Start development server using `yarn build --watch`
 
 ## License
 
