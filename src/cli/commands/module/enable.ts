@@ -4,7 +4,7 @@ import { Command } from "../Command";
 
 export const enable: Command = {
   name: "Enable",
-  description: "Enable Nuxt Hue, makes your cooler",
+  description: "Enable Nuxt Hue module in case you turned it off by mistake",
   usage: "enable",
   run(): void {
     NuxtHue.enable();
