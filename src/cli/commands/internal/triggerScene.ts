@@ -8,10 +8,6 @@ export const triggerScene: Command = {
   run(args = []): void {
     const sceneId = args[0];
 
-    try {
-      NuxtHue.getBridge().triggerScene(sceneId);
-    } catch (error) {
-      // Fail silently
-    }
+    NuxtHue.triggerScene(sceneId, true);
   }
 };

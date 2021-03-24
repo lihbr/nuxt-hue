@@ -1,6 +1,7 @@
 import defu from "defu";
 import { Module } from "@nuxt/types";
 import exit from "exit";
+import { LogLevel } from "consola";
 import * as NuxtHue from "./core/NuxtHue";
 import { logger } from "./utils";
 
@@ -16,7 +17,13 @@ const nuxtModule: Module<NuxtHue.Config> = async function (
     DEFAULTS
   );
 
-  const nuxtHueStatus = await NuxtHue.getStatus();
+  // Log everything when on debug
+  if (options.debug) {
+    logger.level = LogLevel.Debug;
+  }
+
+  // Check status and exit if not OK
+  const nuxtHueStatus = await NuxtHue.getStatus(options);
   const nuxtHueFormattedStatus = await NuxtHue.getFormattedStatus(
     nuxtHueStatus,
     {
@@ -24,7 +31,6 @@ const nuxtModule: Module<NuxtHue.Config> = async function (
       withHint: true
     }
   );
-
   switch (nuxtHueStatus) {
     case NuxtHue.Code.BridgeAndScenesNotConfigured:
     case NuxtHue.Code.BridgeNotConfigured:
@@ -40,20 +46,21 @@ const nuxtModule: Module<NuxtHue.Config> = async function (
       break;
   }
 
+  // Current bridge
   const bridge = NuxtHue.getBridge(options);
 
   // Basic hooks
   this.nuxt.hook("ready", () => {
-    logger.info("ready");
-    bridge.triggerScene(options.scenes?.start.id);
+    logger.debug("ready hook");
+    NuxtHue.triggerScene(options.scenes?.start.id, true, bridge, options);
   });
   this.nuxt.hook("error", () => {
-    logger.info("error");
-    bridge.triggerScene(options.scenes?.error.id);
+    logger.debug("error hook");
+    NuxtHue.triggerScene(options.scenes?.error.id, true, bridge, options);
   });
   this.nuxt.hook("close", () => {
-    logger.info("close");
-    bridge.triggerScene(options.scenes?.end.id);
+    logger.debug("close hook");
+    NuxtHue.triggerScene(options.scenes?.end.id, true, bridge, options);
   });
 
   // Webpack build hooks
@@ -65,30 +72,34 @@ const nuxtModule: Module<NuxtHue.Config> = async function (
   this.nuxt.hook("bundler:error", () => {
     hasBundlerError = true;
     hasBundlerChanges = true;
-    logger.info("bundler:error");
-    bridge.triggerScene(options.scenes?.error.id);
+    logger.debug("bundler:error hook");
+    NuxtHue.triggerScene(options.scenes?.error.id, true, bridge, options);
   });
   this.nuxt.hook("bundler:done", () => {
     if (!hasBundlerError && hasBundlerChanges) {
       hasBundlerChanges = false;
-      logger.info("bundler:done");
-      bridge.triggerScene(options.scenes?.start.id);
+      logger.debug("bundler:done hook");
+      NuxtHue.triggerScene(options.scenes?.start.id, true, bridge, options);
     }
   });
 
   // Process exit hook
   let exited = false;
   function exitHandler(signal: number, shouldExit = false) {
+    // Run only once
     if (exited) {
       return;
     }
-
     exited = true;
 
+    logger.debug(
+      `exitHandler hook, signal: ${signal}, shouldExit: ${shouldExit}`
+    );
+
     if ([1, 2].includes(signal)) {
-      bridge.triggerSceneExec(options.scenes?.error.id);
+      NuxtHue.triggerSceneExec(options.scenes?.error.id, true, bridge, options);
     } else {
-      bridge.triggerSceneExec(options.scenes?.end.id);
+      NuxtHue.triggerSceneExec(options.scenes?.end.id, true, bridge, options);
     }
 
     if (shouldExit) {
@@ -100,7 +111,7 @@ const nuxtModule: Module<NuxtHue.Config> = async function (
   process.once("SIGTERM", exitHandler.bind(null, 128 + 15, true));
 
   // Activate start scene
-  await bridge.triggerScene(options.scenes?.start.id);
+  await NuxtHue.triggerScene(options.scenes?.start.id, true, bridge, options);
   logger.log("💡 Nuxt Hue is running~");
 };
 (nuxtModule as any).meta = require("../package.json");

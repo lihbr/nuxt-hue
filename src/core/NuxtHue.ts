@@ -3,6 +3,7 @@ import { NuxtOptionsModule } from "@nuxt/types/config/module";
 import * as rc from "rc9";
 import env from "std-env";
 import pkg from "../../package.json";
+import { logger } from "../utils";
 import { Bridge, Scene } from "./Bridge";
 
 const packageRoot = path.join(__dirname, "..");
@@ -23,6 +24,7 @@ export interface ScenesOptions {
 export interface Config {
   bridge?: BridgeOptions;
   scenes?: ScenesOptions;
+  debug?: boolean;
 }
 
 export interface ConfigRC {
@@ -357,4 +359,60 @@ export function updateScenes({ start, error, end }: ScenesOptions): void {
       }
     }
   });
+}
+
+/**
+ * Trigger scene on provided or current bridge
+ */
+export async function triggerScene(
+  sceneId?: string,
+  failGracefully: boolean = false,
+  bridge?: Bridge,
+  config?: Config
+): Promise<void> {
+  if (!config) {
+    config = read().hue;
+  }
+  if (!bridge) {
+    bridge = getBridge(config);
+  }
+
+  try {
+    await bridge.triggerScene(sceneId);
+  } catch (error) {
+    if (config?.debug) {
+      logger.warn(error);
+    }
+    if (!failGracefully) {
+      throw error;
+    }
+  }
+}
+
+/**
+ * Trigger scene on another process on provided or current bridge
+ */
+export function triggerSceneExec(
+  sceneId?: string,
+  failGracefully: boolean = false,
+  bridge?: Bridge,
+  config?: Config
+): void {
+  if (!config) {
+    config = read().hue;
+  }
+  if (!bridge) {
+    bridge = getBridge(config);
+  }
+
+  try {
+    bridge.triggerSceneExec(sceneId);
+  } catch (error) {
+    if (config?.debug) {
+      logger.warn(error);
+    }
+    if (!failGracefully) {
+      throw error;
+    }
+  }
 }
