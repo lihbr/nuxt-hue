@@ -5,7 +5,7 @@
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 [![Github Actions CI][github-actions-ci-src]][github-actions-ci-href]
-[![Codecov](./docs/static/coverage.svg)][codecov-href]
+[![Codecov](https://nuxt-hue.lihbr.com/coverage.svg)][codecov-href]
 [![License][license-src]][license-href]
 
 > Enlight your Nuxt experience
