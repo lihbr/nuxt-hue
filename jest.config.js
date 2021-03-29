@@ -4,7 +4,10 @@ module.exports = {
       "babel-jest",
       {
         presets: ["@babel/preset-env", "@babel/preset-typescript"],
-        plugins: ["@babel/plugin-transform-runtime"]
+        plugins: [
+          "@babel/plugin-transform-runtime",
+          "@babel/plugin-proposal-class-properties"
+        ]
       }
     ]
   },
