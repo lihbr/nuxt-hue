@@ -4,10 +4,10 @@ import { Command } from "../Command";
 
 export const wipe: Command = {
   name: "Wipe",
-  description: "Wipe everything related to Nuxt Hue from .nuxtrc",
+  description: "Like `rm -rf /*` but for Nuxt Hue config",
   usage: "wipe",
   run(): void {
     NuxtHue.wipe();
-    logger.success(`Nuxt Hue has been wiped`);
+    logger.success(`Nuxt Hue config has been wiped`);
   }
 };
