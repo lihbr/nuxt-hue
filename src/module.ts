@@ -52,7 +52,8 @@ const nuxtModule: Module<NuxtHue.Config> = async function (
   // Basic hooks
   this.nuxt.hook("ready", () => {
     logger.debug("ready hook");
-    NuxtHue.triggerScene(options.scenes?.start.id, true, bridge, options);
+    // Redundant
+    // NuxtHue.triggerScene(options.scenes?.start.id, true, bridge, options);
   });
   this.nuxt.hook("error", () => {
     logger.debug("error hook");
@@ -111,7 +112,7 @@ const nuxtModule: Module<NuxtHue.Config> = async function (
   process.once("SIGTERM", exitHandler.bind(null, 128 + 15, true));
 
   // Activate start scene
-  await NuxtHue.triggerScene(options.scenes?.start.id, true, bridge, options);
+  NuxtHue.triggerScene(options.scenes?.start.id, true, bridge, options);
   logger.log("💡 Nuxt Hue is running~");
 };
 (nuxtModule as any).meta = require("../package.json");
