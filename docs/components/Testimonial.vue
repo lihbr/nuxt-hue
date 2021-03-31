@@ -20,9 +20,9 @@
           class="text-primary-400 hover:border-b-2 hover:border-primary-400 pb-px"
           target="_blank"
           rel="noopener"
-          :href="githubUrl"
+          :href="twitterUrl"
         >
-          {{ finalDisplayName }}
+          {{ displayName }}
         </a>
         <div v-if="displayTitle" class="text-gray-400">
           {{ displayTitle }}
@@ -36,18 +36,25 @@
 export default {
   props: {
     /**
-     * @description GitHub username
+     * @description Name to display
      */
-    user: {
+    name: {
+      type: String,
+      default: ""
+    },
+    /**
+     * @description Twitter username
+     */
+    twitterHandle: {
       type: String,
       required: true
     },
     /**
-     * @description Name to display
+     * @description GitHub username
      */
-    displayName: {
+    githubHandle: {
       type: String,
-      default: ""
+      required: true
     },
     /**
      * @description An optional title to display
@@ -65,17 +72,20 @@ export default {
     }
   },
   computed: {
-    finalDisplayName() {
-      return this.displayName || this.user;
+    displayName() {
+      return this.name || this.twitterHandle || this.githubHandle;
     },
     githubUrl() {
-      return `https://github.com/${this.user}`;
+      return `https://github.com/${this.githubHandle}`;
+    },
+    twitterUrl() {
+      return `https://twitter.com/${this.twitterHandle}`;
     },
     avatarSrc() {
       return `${this.githubUrl}.png`;
     },
     avatarAlt() {
-      return `${this.finalDisplayName}'s avatar`;
+      return `${this.displayName}'s avatar`;
     }
   }
 };
