@@ -132,11 +132,15 @@ export class Bridge {
       return false;
     }
 
-    const json = await Bridge.query<{ whitelist?: any }>(
-      `${this.api}/${this.username}/config`
-    );
+    try {
+      const json = await Bridge.query<{ whitelist?: any }>(
+        `${this.api}/${this.username}/config`
+      );
 
-    return !!json.whitelist;
+      return !!json.whitelist;
+    } catch (error) {
+      return false;
+    }
   }
 
   private async getObject<T>(object: string): Promise<T[]> {
