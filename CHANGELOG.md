@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.69](https://github.com/lihbr/nuxt-hue/compare/v0.0.1-doge.1...v0.0.69) (2021-04-01)
+
+
+### Bug Fixes
+
+* **core:** catch bridge isPaired failure ([7ad242f](https://github.com/lihbr/nuxt-hue/commit/7ad242f368115bacc6aa8b8890d716db06d04af3))
+* **module:** remove redundant start call ([24200a2](https://github.com/lihbr/nuxt-hue/commit/24200a215b9bae04421f44519acd545122f4921e))
+
 ### [0.0.1-doge.1](https://github.com/lihbr/nuxt-hue/compare/v0.0.1-doge.0...v0.0.1-doge.1) (2021-03-30)
 
 ### 0.0.1-doge.0 (2021-03-29)
