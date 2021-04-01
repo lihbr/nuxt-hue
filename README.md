@@ -8,7 +8,7 @@
 [![Codecov](https://nuxt-hue.lihbr.com/coverage.svg)][codecov-href]
 [![License][license-src]][license-href]
 
-> Enlight your Nuxt experience
+> Enlighten your Nuxt experience
 
 - [✨ &nbsp;Release Notes](/CHANGELOG.md)
 - [📖 &nbsp;Read the documentation](https://nuxt-hue.lihbr.com)
