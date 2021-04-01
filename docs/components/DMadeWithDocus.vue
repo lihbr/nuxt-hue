@@ -6,7 +6,7 @@
       href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
       class="text-xs text-gray-400 hover:text-gray-600 dark:text-gray-600 group dark:hover:text-gray-400"
     >
-      Powered by <strong class="font-bold">SWAG</strong>
+      Powered by <strong class="font-bold">SWAGUS</strong>
     </a>
   </div>
 </template>
