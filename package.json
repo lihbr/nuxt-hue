@@ -1,6 +1,6 @@
 {
   "name": "nuxt-hue",
-  "version": "0.0.1-doge.1",
+  "version": "0.0.68",
   "description": "Enlight your Nuxt experience",
   "keywords": [
     "nuxt",
@@ -27,7 +27,7 @@
     "build": "siroc build",
     "dev": "nuxt example",
     "lint": "eslint --ext .js,.ts,.vue .",
-    "release": "yarn build && yarn test && standard-version && git push --follow-tags && yarn build && npm publish",
+    "release": "yarn build && yarn test && standard-version --release-as patch && git push --follow-tags && yarn build && npm publish",
     "release:doge": "yarn build && yarn test && standard-version --release-as patch --prerelease doge && git push --follow-tags && yarn build && npm publish --tag doge",
     "test": "yarn lint && jest",
     "postinstall": "node postinstall.js"
