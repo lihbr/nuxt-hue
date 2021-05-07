@@ -6,7 +6,6 @@ module.exports = {
       2,
       "always",
       ["core", "cli", "module", "release", "config", "deps", "misc"]
-    ],
-    "scope-empty": [2, "never"]
+    ]
   }
 };

@@ -7,7 +7,6 @@
     "light": "/logo-light.svg",
     "dark": "/logo-dark.svg"
   },
-
   "header": {
     "logo": true,
     "title": false
