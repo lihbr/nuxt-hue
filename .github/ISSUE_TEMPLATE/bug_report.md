@@ -8,8 +8,8 @@ assignees: ""
 
 ## Version
 
-Node: <!-- ex: 12.0.0 -->
-Nuxt: <!-- ex: 2.0.0 -->
+Node: <!-- ex: 14.0.0 -->
+Nuxt: <!-- ex: 3.0.0 -->
 Module: <!-- ex: 1.0.0 -->
 
 ## Nuxt configuration

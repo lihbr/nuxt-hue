@@ -1,2 +1,2 @@
-export { help } from "./help";
-export { version } from "./version";
+export { help } from './help'
+export { version } from './version'

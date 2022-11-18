@@ -1,1 +1,1 @@
-export { triggerScene } from "./triggerScene";
+export { triggerScene } from './triggerScene'

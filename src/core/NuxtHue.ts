@@ -1,193 +1,194 @@
-import path from "path";
-import { NuxtOptionsModule } from "@nuxt/types/config/module";
-import * as rc from "rc9";
-import env from "std-env";
-import pkg from "../../package.json";
-import { logger } from "../utils";
-import { Bridge, Scene } from "./Bridge";
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-const packageRoot = path.join(__dirname, "..");
-const packageFolder = env.windows ? pkg.name.replace(/\//g, "\\") : pkg.name;
+import * as rc from 'rc9'
+
+import { logger } from '../utils'
+import { Bridge, Scene } from './Bridge'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+const moduleEntry = path.join(__dirname, '..', 'module.js')
 
 export interface BridgeOptions {
-  ip: string;
-  id: string;
-  username: string;
+	ip: string;
+	id: string;
+	username: string;
 }
 
 export interface ScenesOptions {
-  start: Pick<Scene, "id" | "name">;
-  error: Pick<Scene, "id" | "name">;
-  end: Pick<Scene, "id" | "name">;
+	start: Pick<Scene, 'id' | 'name'>;
+	error: Pick<Scene, 'id' | 'name'>;
+	end: Pick<Scene, 'id' | 'name'>;
 }
 
 export interface Config {
-  bridge?: BridgeOptions;
-  scenes?: ScenesOptions;
-  debug?: boolean;
+	bridge?: BridgeOptions;
+	scenes?: ScenesOptions;
+	debug?: boolean;
 }
 
 export interface ConfigRC {
-  buildModules?: NuxtOptionsModule[];
-  hue?: Config;
+	modules?: (string | [string, Record<string, any>])[];
+	hue?: Config;
 }
 
 export enum Code {
-  Ok = "Ok",
-  BridgeAndScenesNotConfigured = "Bridge and Scenes Are Not Configured",
-  BridgeNotConfigured = "Bridge Not Configured",
-  ScenesNotConfigured = "Scenes Not Configured",
-  Unknown = "Unknown"
+	Ok = 'Ok',
+	BridgeAndScenesNotConfigured = 'Bridge and Scenes Are Not Configured',
+	BridgeNotConfigured = 'Bridge Not Configured',
+	ScenesNotConfigured = 'Scenes Not Configured',
+	Unknown = 'Unknown'
 }
 
-export const RC_FILE = ".nuxtrc";
+export const RC_FILE = '.nuxtrc'
 
-export const CLI_COMMAND = "nuxt-hue";
+export const CLI_COMMAND = 'nuxt-hue'
 
 /**
  * Read config file
  */
-export function read(): ConfigRC {
-  return rc.readUser(RC_FILE);
+export function read (): ConfigRC {
+	return rc.readUser(RC_FILE)
 }
 
 /**
  * Write config file
  */
-export function write(config: ConfigRC): void {
-  rc.writeUser(config, RC_FILE);
+export function write (config: ConfigRC): void {
+	rc.writeUser(config, RC_FILE)
 }
 
 /**
  * Update config file
  */
-export function update(config: ConfigRC): void {
-  rc.updateUser(config, RC_FILE);
+export function update (config: ConfigRC): void {
+	rc.updateUser(config, RC_FILE)
 }
 
 /**
  * Remove everything Nuxt Hue related from config file
  */
-export function wipe(): void {
-  disable();
+export function wipe (): void {
+	disable()
 
-  const config = read();
+	const config = read()
 
-  delete config.hue;
+	delete config.hue
 
-  write(config);
+	write(config)
 }
 
 /**
  * Remove bridge options from config file
  */
-export function wipeBridge(): void {
-  const config = read();
+export function wipeBridge (): void {
+	const config = read()
 
-  if (config.hue) {
-    delete config.hue.bridge;
-    if (Object.keys(config.hue).length === 0) {
-      delete config.hue;
-    }
-  }
+	if (config.hue) {
+		delete config.hue.bridge
+		if (Object.keys(config.hue).length === 0) {
+			delete config.hue
+		}
+	}
 
-  write(config);
+	write(config)
 }
 
 /**
  * Remove scenes options from config file
  */
-export function wipeScenes(): void {
-  const config = read();
+export function wipeScenes (): void {
+	const config = read()
 
-  if (config.hue) {
-    delete config.hue.scenes;
-    if (Object.keys(config.hue).length === 0) {
-      delete config.hue;
-    }
-  }
+	if (config.hue) {
+		delete config.hue.scenes
+		if (Object.keys(config.hue).length === 0) {
+			delete config.hue
+		}
+	}
 
-  write(config);
+	write(config)
 }
 
 /**
  * Enable Nuxt Hue module
  */
-export function enable(): void {
-  const config = read();
+export function enable (): void {
+	const config = read()
 
-  if (config.buildModules) {
-    if (
-      !config.buildModules.find(
-        i => typeof i === "string" && i.endsWith(packageFolder)
-      )
-    ) {
-      config.buildModules.push(packageRoot);
-    }
-  } else {
-    config.buildModules = [packageRoot];
-  }
+	if (config.modules) {
+		if (
+			!config.modules.find(
+				i => typeof i === 'string' && i === moduleEntry
+			)
+		) {
+			config.modules.push(moduleEntry)
+		}
+	} else {
+		config.modules = [moduleEntry]
+	}
 
-  write(config);
+	write(config)
 }
 
 /**
  * Disable Nuxt Hue module
  */
-export function disable(): void {
-  const config = read();
+export function disable (): void {
+	const config = read()
 
-  config.buildModules =
-    config.buildModules?.filter(
-      i => !(typeof i === "string" && i.endsWith(packageFolder))
-    ) ?? [];
-  if (!config.buildModules.length) {
-    delete config.buildModules;
-  }
+	config.modules =
+		config.modules?.filter(
+			i => !(typeof i === 'string' && i === moduleEntry)
+		) ?? []
+	if (!config.modules.length) {
+		delete config.modules
+	}
 
-  write(config);
+	write(config)
 }
 
 /**
  * Check if Nuxt Hue module is enabled
  */
-export function isEnabled(): boolean {
-  const config = read();
+export function isEnabled (): boolean {
+	const config = read()
 
-  return (
-    !!config.buildModules?.find(
-      i => typeof i === "string" && i.endsWith(packageFolder)
-    ) ?? false
-  );
+	return (
+		!!config.modules?.find(
+			i => typeof i === 'string' && i === moduleEntry
+		) ?? false
+	)
 }
 
 /**
  * Check if Nuxt Hue has a bridge
  */
-export function hasBridge(hue?: Config): boolean {
-  if (!hue) {
-    hue = read().hue;
-  }
+export function hasBridge (hue?: Config): boolean {
+	if (!hue) {
+		hue = read().hue
+	}
 
-  return !!(
-    hue &&
+	return !!(
+		hue &&
     hue.bridge &&
     hue.bridge.ip &&
     hue.bridge.id &&
     hue.bridge.username
-  );
+	)
 }
 
 /**
  * Check if Nuxt Hue has scenes
  */
-export function hasScenes(hue?: Config): boolean {
-  if (!hue) {
-    hue = read().hue;
-  }
+export function hasScenes (hue?: Config): boolean {
+	if (!hue) {
+		hue = read().hue
+	}
 
-  return !!(
-    hue &&
+	return !!(
+		hue &&
     hue.scenes &&
     hue.scenes.start &&
     hue.scenes.start.id &&
@@ -198,221 +199,221 @@ export function hasScenes(hue?: Config): boolean {
     hue.scenes.end &&
     hue.scenes.end.id &&
     hue.scenes.end.name
-  );
+	)
 }
 
 /**
  * Get current status code
  */
-export async function getStatus(hue?: Config): Promise<Code> {
-  if (!hue) {
-    hue = read().hue;
-  }
+export async function getStatus (hue?: Config): Promise<Code> {
+	if (!hue) {
+		hue = read().hue
+	}
 
-  const bridgeOk = hasBridge() && (await isPaired());
-  const scenesOk = hasScenes();
+	const bridgeOk = hasBridge() && (await isPaired())
+	const scenesOk = hasScenes()
 
-  if (bridgeOk && scenesOk) {
-    return Code.Ok;
-  } else if (!bridgeOk && !scenesOk) {
-    return Code.BridgeAndScenesNotConfigured;
-  } else if (!bridgeOk) {
-    return Code.BridgeNotConfigured;
-  } else if (!scenesOk) {
-    return Code.ScenesNotConfigured;
-  } else {
-    return Code.Unknown;
-  }
+	if (bridgeOk && scenesOk) {
+		return Code.Ok
+	} else if (!bridgeOk && !scenesOk) {
+		return Code.BridgeAndScenesNotConfigured
+	} else if (!bridgeOk) {
+		return Code.BridgeNotConfigured
+	} else if (!scenesOk) {
+		return Code.ScenesNotConfigured
+	} else {
+		return Code.Unknown
+	}
 }
 
 /**
  * Get formatted status code for provided one or current
  */
-export async function getFormattedStatus(
-  status?: Code,
-  {
-    withModule = false,
-    withHint = false
-  }: { withModule?: boolean; withHint?: boolean } = {}
+export async function getFormattedStatus (
+	status?: Code,
+	{
+		withModule = false,
+		withHint = false
+	}: { withModule?: boolean; withHint?: boolean } = {}
 ): Promise<string> {
-  if (!status) {
-    status = await getStatus();
-  }
+	if (!status) {
+		status = await getStatus()
+	}
 
-  const maybeModule = withModule
-    ? ` ${isEnabled() ? "enabled" : "disabled"}`
-    : "";
-  const maybeModuleComma = withModule ? "," : "";
-  const maybeModuleWithConjunction = withModule
-    ? `${maybeModule}${isEnabled() ? " but" : " and"}`
-    : "";
+	const maybeModule = withModule
+		? ` ${isEnabled() ? 'enabled' : 'disabled'}`
+		: ''
+	const maybeModuleComma = withModule ? ',' : ''
+	const maybeModuleWithConjunction = withModule
+		? `${maybeModule}${isEnabled() ? ' but' : ' and'}`
+		: ''
 
-  let maybeHint = withHint ? "\n\n" : "";
-  switch (status) {
-    case Code.Ok:
-      return `Nuxt Hue is${maybeModule}${maybeModuleComma} connected to a bridge (${
-        getBridge().ip
-      })${maybeModuleComma} and has scenes configured`;
+	let maybeHint = withHint ? '\n\n' : ''
+	switch (status) {
+		case Code.Ok:
+			return `Nuxt Hue is${maybeModule}${maybeModuleComma} connected to a bridge (${
+				getBridge().ip
+			})${maybeModuleComma} and has scenes configured`
 
-    case Code.BridgeAndScenesNotConfigured:
-      maybeHint += withHint
-        ? `Run the setup wizard with:\n  $ ${CLI_COMMAND} setup`
-        : "";
-      // Never display module status as it's not relevant here
-      return `Nuxt Hue is not setup${maybeHint}`;
+		case Code.BridgeAndScenesNotConfigured:
+			maybeHint += withHint
+				? `Run the setup wizard with:\n  $ ${CLI_COMMAND} setup`
+				: ''
+			// Never display module status as it's not relevant here
+			return `Nuxt Hue is not setup${maybeHint}`
 
-    case Code.BridgeNotConfigured:
-      maybeHint += withHint
-        ? `Connect to one with:\n  $ ${CLI_COMMAND} connect`
-        : "";
-      return `Nuxt Hue is${maybeModuleWithConjunction} not connected to a bridge${maybeHint}`;
+		case Code.BridgeNotConfigured:
+			maybeHint += withHint
+				? `Connect to one with:\n  $ ${CLI_COMMAND} connect`
+				: ''
+			return `Nuxt Hue is${maybeModuleWithConjunction} not connected to a bridge${maybeHint}`
 
-    case Code.ScenesNotConfigured:
-      maybeHint += withHint
-        ? `Configure them with:\n  $ ${CLI_COMMAND} scenes`
-        : "";
-      return `Nuxt Hue is${maybeModule}${
-        withModule ? " and" : ""
-      } connected to a bridge but scenes are not configured${maybeHint}`;
+		case Code.ScenesNotConfigured:
+			maybeHint += withHint
+				? `Configure them with:\n  $ ${CLI_COMMAND} scenes`
+				: ''
+			return `Nuxt Hue is${maybeModule}${
+				withModule ? ' and' : ''
+			} connected to a bridge but scenes are not configured${maybeHint}`
 
-    case Code.Unknown:
-    default:
-      maybeHint += withHint
-        ? `Try running the setup wizard with:\n  $ ${CLI_COMMAND} setup`
-        : "";
-      // Never display module status as it's not relevant here
-      return `Nuxt Hue status is unknown, this should not happen${maybeHint}`;
-  }
+		case Code.Unknown:
+		default:
+			maybeHint += withHint
+				? `Try running the setup wizard with:\n  $ ${CLI_COMMAND} setup`
+				: ''
+			// Never display module status as it's not relevant here
+			return `Nuxt Hue status is unknown, this should not happen${maybeHint}`
+	}
 }
 
 /**
  * Get currently configured bridge
  */
-export function getBridge(hue?: Config): Bridge {
-  if (!hue) {
-    hue = read().hue;
-  }
+export function getBridge (hue?: Config): Bridge {
+	if (!hue) {
+		hue = read().hue
+	}
 
-  if (hue && hue.bridge) {
-    const { ip, id, username } = hue.bridge;
-    return new Bridge(ip, id, username);
-  } else {
-    throw new Error(Code.BridgeNotConfigured);
-  }
+	if (hue && hue.bridge) {
+		const { ip, id, username } = hue.bridge
+		return new Bridge(ip, id, username)
+	} else {
+		throw new Error(Code.BridgeNotConfigured)
+	}
 }
 
 /**
  * Get currently configured scenes
  */
-export function getScenes(hue?: Config): ScenesOptions {
-  if (!hue) {
-    hue = read().hue;
-  }
+export function getScenes (hue?: Config): ScenesOptions {
+	if (!hue) {
+		hue = read().hue
+	}
 
-  if (hue && hue.scenes) {
-    return hue.scenes;
-  } else {
-    throw new Error(Code.ScenesNotConfigured);
-  }
+	if (hue && hue.scenes) {
+		return hue.scenes
+	} else {
+		throw new Error(Code.ScenesNotConfigured)
+	}
 }
 
 /**
  * Check if a bridge is correctly configured, wipe its config if not
  */
-export async function isPaired(): Promise<boolean> {
-  const bridge = getBridge();
+export async function isPaired (): Promise<boolean> {
+	const bridge = getBridge()
 
-  const isPaired = await bridge.isPaired();
+	const isPaired = await bridge.isPaired()
 
-  if (!isPaired) {
-    wipeBridge();
-  }
+	if (!isPaired) {
+		wipeBridge()
+	}
 
-  return isPaired;
+	return isPaired
 }
 
 /**
  * Update bridge options
  */
-export function updateBridge({ ip, id, username }: BridgeOptions): void {
-  update({
-    hue: {
-      bridge: {
-        ip,
-        id,
-        username
-      }
-    }
-  });
+export function updateBridge ({ ip, id, username }: BridgeOptions): void {
+	update({
+		hue: {
+			bridge: {
+				ip,
+				id,
+				username
+			}
+		}
+	})
 }
 
 /**
  * Update scenes options
  */
-export function updateScenes({ start, error, end }: ScenesOptions): void {
-  update({
-    hue: {
-      scenes: {
-        start,
-        error,
-        end
-      }
-    }
-  });
+export function updateScenes ({ start, error, end }: ScenesOptions): void {
+	update({
+		hue: {
+			scenes: {
+				start,
+				error,
+				end
+			}
+		}
+	})
 }
 
 /**
  * Trigger scene on provided or current bridge
  */
-export async function triggerScene(
-  sceneId?: string,
-  failGracefully: boolean = false,
-  bridge?: Bridge,
-  config?: Config
+export async function triggerScene (
+	sceneId?: string,
+	failGracefully = false,
+	bridge?: Bridge,
+	config?: Config
 ): Promise<void> {
-  if (!config) {
-    config = read().hue;
-  }
-  if (!bridge) {
-    bridge = getBridge(config);
-  }
+	if (!config) {
+		config = read().hue
+	}
+	if (!bridge) {
+		bridge = getBridge(config)
+	}
 
-  try {
-    await bridge.triggerScene(sceneId);
-  } catch (error) {
-    if (config?.debug) {
-      logger.warn(error);
-    }
-    if (!failGracefully) {
-      throw error;
-    }
-  }
+	try {
+		await bridge.triggerScene(sceneId)
+	} catch (error) {
+		if (config?.debug) {
+			logger.warn(error)
+		}
+		if (!failGracefully) {
+			throw error
+		}
+	}
 }
 
 /**
  * Trigger scene on another process on provided or current bridge
  */
-export function triggerSceneExec(
-  sceneId?: string,
-  failGracefully: boolean = false,
-  bridge?: Bridge,
-  config?: Config
+export function triggerSceneExec (
+	sceneId?: string,
+	failGracefully = false,
+	bridge?: Bridge,
+	config?: Config
 ): void {
-  if (!config) {
-    config = read().hue;
-  }
-  if (!bridge) {
-    bridge = getBridge(config);
-  }
+	if (!config) {
+		config = read().hue
+	}
+	if (!bridge) {
+		bridge = getBridge(config)
+	}
 
-  try {
-    bridge.triggerSceneExec(sceneId);
-  } catch (error) {
-    if (config?.debug) {
-      logger.warn(error);
-    }
-    if (!failGracefully) {
-      throw error;
-    }
-  }
+	try {
+		bridge.triggerSceneExec(sceneId)
+	} catch (error) {
+		if (config?.debug) {
+			logger.warn(error)
+		}
+		if (!failGracefully) {
+			throw error
+		}
+	}
 }
