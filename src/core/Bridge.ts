@@ -178,13 +178,11 @@ export class Bridge {
 		)
 	}
 
-	triggerSceneExec (sceneId?: string): void {
+	triggerSceneExec (execaSync: typeof import('execa')['execaSync'], sceneId?: string): void {
 		if (!sceneId) {
 			return
 		}
 
-		// eslint-disable-next-line @typescript-eslint/no-var-requires
-		const { execaSync } = require('execa')
 		execaSync('nuxt-hue', ['trigger-scene', sceneId])
 	}
 }

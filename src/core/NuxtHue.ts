@@ -2,6 +2,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import * as rc from 'rc9'
+import { execaSync } from 'execa'
 
 import { logger } from '../utils'
 import { Bridge, Scene } from './Bridge'
@@ -407,7 +408,7 @@ export function triggerSceneExec (
 	}
 
 	try {
-		bridge.triggerSceneExec(sceneId)
+		bridge.triggerSceneExec(execaSync, sceneId)
 	} catch (error) {
 		if (config?.debug) {
 			logger.warn(error)
