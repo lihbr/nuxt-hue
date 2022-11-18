@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.21](https://github.com/lihbr/nuxt-hue/compare/v0.4.20...v0.4.21) (2022-11-18)
+
+
+### Bug Fixes
+
+* nuxt imports ([b692bb9](https://github.com/lihbr/nuxt-hue/commit/b692bb934d09c26889f8d2711447b687f31d4a69))
+* provide `execaSync` as a callback ([f9caba4](https://github.com/lihbr/nuxt-hue/commit/f9caba4334e1185e9f8639cce82454222a267bda))
+* vite allow list ([3ceccc5](https://github.com/lihbr/nuxt-hue/commit/3ceccc5042c9a014ff8c11c12a80598672c4b879))
+
 ### [0.4.20](https://github.com/lihbr/nuxt-hue/compare/v0.0.69...v0.4.20) (2022-11-18)
 
 
