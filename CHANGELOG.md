@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.20](https://github.com/lihbr/nuxt-hue/compare/v0.0.69...v0.4.20) (2022-11-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* **deps:** support Nuxt 3
+
+### Features
+
+* **deps:** support Nuxt 3 ([1ed5fb2](https://github.com/lihbr/nuxt-hue/commit/1ed5fb29209b58cb83ca3d196670079a38683a69))
+
+
+### Chore
+
+* add .versionrc ([f865a55](https://github.com/lihbr/nuxt-hue/commit/f865a559a0c2067b901fe2d6ac9d2f7056df6ace))
+
+
+### Documentation
+
+* **misc:** typo ([03b21af](https://github.com/lihbr/nuxt-hue/commit/03b21afdbee0334ab7dd52b9858fda0d8165ccc0))
+* **misc:** typo ([732406c](https://github.com/lihbr/nuxt-hue/commit/732406cdf96e2dd54ef507884a43832587da0b22))
+* **misc:** update footnote ([2de15d4](https://github.com/lihbr/nuxt-hue/commit/2de15d4ac31985f838b5251c30807469cebda9f9))
+* nuxt 3 support ([b454eee](https://github.com/lihbr/nuxt-hue/commit/b454eee657c7dfd873b05694eea6d5f54b6c7ab0))
+* typo ([cd0e61c](https://github.com/lihbr/nuxt-hue/commit/cd0e61c6601cf3bc9bec0d54c7c27ee080289864))
+* update doc ([b530c81](https://github.com/lihbr/nuxt-hue/commit/b530c81e8ba23c6bda0751327daf77fdfa8544f2))
+* update doc ([a08dccd](https://github.com/lihbr/nuxt-hue/commit/a08dccdfca5acb8895f038d44915947072c1c67c))
+
 ### [0.0.69](https://github.com/lihbr/nuxt-hue/compare/v0.0.1-doge.1...v0.0.69) (2021-04-01)
 
 
