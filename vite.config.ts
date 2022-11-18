@@ -10,7 +10,7 @@ export default defineConfig({
 			entry: ['src/module.ts', 'src/plugin.ts', 'src/cli.ts']
 		},
 		rollupOptions: {
-			external: ['nuxt/app']
+			external: ['#app']
 		}
 	},
 	plugins: [sdk()],

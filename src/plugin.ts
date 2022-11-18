@@ -1,4 +1,4 @@
-import { defineNuxtPlugin } from 'nuxt/app'
+import { defineNuxtPlugin } from '#app'
 import { LogLevel } from 'consola'
 
 import type { Config } from './core/NuxtHue'
