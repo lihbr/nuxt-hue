@@ -59,7 +59,7 @@ export default defineNuxtModule<NuxtHue.Config>({
 			nuxt.options.vite.server ||= {}
 			nuxt.options.vite.server!.fs ||= {}
 			nuxt.options.vite.server!.fs!.allow ||= []
-			nuxt.options.vite.server!.fs!.allow!.push(resolver.resolve('./'))
+			nuxt.options.vite.server!.fs!.allow!.push(resolver.resolve('../'))
 			nuxt.options.vite.optimizeDeps ||= {}
 			nuxt.options.vite.optimizeDeps!.exclude ||= []
 			nuxt.options.vite.optimizeDeps!.exclude!.push(plugin)
