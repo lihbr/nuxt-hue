@@ -5,4 +5,5 @@
 </template>
 
 <script setup>
+console.log('nuxt-hue')
 </script>

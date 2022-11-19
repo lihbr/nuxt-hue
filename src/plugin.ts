@@ -38,11 +38,13 @@ export default defineNuxtPlugin((nuxtApp) => {
 	// App
 	nuxtApp.hook('app:created', () => {
 		logger.debug('app:created')
-		if (hasError) {
-			hasError = false
-		} else {
-			triggerScene('start')
-		}
+		setTimeout(() => {
+			if (hasError) {
+				hasError = false
+			} else {
+				triggerScene('start')
+			}
+		}, 500)
 	})
 	nuxtApp.hook('app:error', () => {
 		logger.debug('app:error')

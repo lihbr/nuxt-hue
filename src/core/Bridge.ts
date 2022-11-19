@@ -49,7 +49,9 @@ export class Bridge {
 			options.body = JSON.stringify(body)
 		}
 
-		const fetch = globalThis.fetch || (await import('node-fetch')).default
+		const fetch = typeof window === 'undefined'
+			? ((await import('node-fetch')).default as unknown as typeof globalThis.fetch)
+			: globalThis.fetch
 
 		const res = await fetch(endpoint, options)
 		return (await res.json()) as T
