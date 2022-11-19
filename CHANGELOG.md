@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.22](https://github.com/lihbr/nuxt-hue/compare/v0.4.21...v0.4.22) (2022-11-19)
+
+
+### Bug Fixes
+
+* node 18 support ([9367e88](https://github.com/lihbr/nuxt-hue/commit/9367e880dd9eb0cd67cacbc3bcfbdfd0a769eff6))
+
 ### [0.4.21](https://github.com/lihbr/nuxt-hue/compare/v0.4.20...v0.4.21) (2022-11-18)
 
 
