@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.23](https://github.com/lihbr/nuxt-hue/compare/v0.4.22...v0.4.23) (2023-05-22)
+
+
+### Bug Fixes
+
+* **deps:** support consola 3 ([1443941](https://github.com/lihbr/nuxt-hue/commit/1443941729d785d8450a2cfb5821b15f689685e8))
+
 ### [0.4.22](https://github.com/lihbr/nuxt-hue/compare/v0.4.21...v0.4.22) (2022-11-19)
 
 
