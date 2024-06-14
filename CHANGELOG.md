@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.24](https://github.com/lihbr/nuxt-hue/compare/v0.4.23...v0.4.24) (2024-06-14)
+
+
+### Chore
+
+* indicate compatibility with new v4 major ([#4](https://github.com/lihbr/nuxt-hue/issues/4)) ([33eca9f](https://github.com/lihbr/nuxt-hue/commit/33eca9f886062e073ea1a019b3855acb556da1f7))
+
 ### [0.4.23](https://github.com/lihbr/nuxt-hue/compare/v0.4.22...v0.4.23) (2023-05-22)
 
 
