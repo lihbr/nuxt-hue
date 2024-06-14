@@ -9,7 +9,7 @@ export default defineNuxtModule<NuxtHue.Config>({
 	meta: {
 		name: 'nuxt-hue',
 		configKey: 'hue',
-		compatibility: { nuxt: '^3.0.0' }
+		compatibility: { nuxt: '>=3.0.0' }
 	},
 	defaults () {
 		return {}
