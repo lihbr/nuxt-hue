@@ -1,18 +1,18 @@
 {
-  "name": "nuxt-hue.docs",
-  "version": "1.0.0",
-  "private": true,
-  "scripts": {
-    "dev": "nuxt",
-    "build": "nuxt build",
-    "start": "nuxt start",
-    "generate": "nuxt generate"
-  },
-  "dependencies": {
-    "docus": "0.1.5",
-    "nuxt-edge": "latest"
-  },
-  "devDependencies": {
-    "@nuxtjs/ackee": "3.0.1"
-  }
+	"name": "nuxt-hue.docs",
+	"version": "1.0.0",
+	"private": true,
+	"scripts": {
+		"dev": "nuxt",
+		"build": "nuxt build",
+		"start": "nuxt start",
+		"generate": "nuxt generate"
+	},
+	"dependencies": {
+		"docus": "0.1.5",
+		"nuxt-edge": "latest"
+	},
+	"devDependencies": {
+		"@nuxtjs/ackee": "3.0.1"
+	}
 }

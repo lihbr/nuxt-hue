@@ -1,25 +1,25 @@
 {
-  "title": "Nuxt Hue",
-  "description": "Enlighten your Nuxt experience",
-  "url": "https://nuxt-hue.lihbr.com",
-  "layout": "docs",
-  "logo": {
-    "light": "/logo-light.svg",
-    "dark": "/logo-dark.svg"
-  },
-  "header": {
-    "logo": true,
-    "title": false
-  },
-  "twitter": "@li_hbr",
-  "github": {
-    "repo": "lihbr/nuxt-hue",
-    "branch": "master",
-    "dir": "docs",
-    "releases": true
-  },
-  "colors": {
-    "primary": "#cf7a13"
-  },
-  "credits": true
+	"title": "Nuxt Hue",
+	"description": "Enlighten your Nuxt experience",
+	"url": "https://nuxt-hue.lihbr.com",
+	"layout": "docs",
+	"logo": {
+		"light": "/logo-light.svg",
+		"dark": "/logo-dark.svg"
+	},
+	"header": {
+		"logo": true,
+		"title": false
+	},
+	"twitter": "@li_hbr",
+	"github": {
+		"repo": "lihbr/nuxt-hue",
+		"branch": "master",
+		"dir": "docs",
+		"releases": true
+	},
+	"colors": {
+		"primary": "#cf7a13"
+	},
+	"credits": true
 }

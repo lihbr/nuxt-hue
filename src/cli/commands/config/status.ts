@@ -1,21 +1,21 @@
-import exit from 'exit'
+import exit from "exit"
 
-import { logger } from '../../../utils'
-import { Command } from '../Command'
-import * as NuxtHue from '../../../core/NuxtHue'
+import { logger } from "../../../utils"
+import type { Command } from "../Command"
+import * as NuxtHue from "../../../core/NuxtHue"
 
 export const status: Command = {
-	name: 'Status',
-	description: 'Check Nuxt Hue status',
-	usage: 'status',
-	async run (): Promise<void> {
+	name: "Status",
+	description: "Check Nuxt Hue status",
+	usage: "status",
+	async run(): Promise<void> {
 		const nuxtHueStatus = await NuxtHue.getStatus()
 		const nuxtHueFormattedStatus = await NuxtHue.getFormattedStatus(
 			nuxtHueStatus,
 			{
 				withModule: true,
-				withHint: true
-			}
+				withHint: true,
+			},
 		)
 
 		switch (nuxtHueStatus) {
@@ -35,5 +35,5 @@ export const status: Command = {
 				exit(2)
 				break
 		}
-	}
+	},
 }

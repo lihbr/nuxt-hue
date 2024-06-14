@@ -1,11 +1,11 @@
-export interface Command {
-	name: string;
-	description: string;
-	usage: string;
+export type Command = {
+	name: string
+	description: string
+	usage: string
 	run: (
 		args?: string[],
 		options?: {
-			programmatic?: boolean;
+			programmatic?: boolean
 		}
-	) => Promise<void> | void;
+	) => Promise<void> | void
 }

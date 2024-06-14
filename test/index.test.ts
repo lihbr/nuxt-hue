@@ -1,6 +1,6 @@
-import { it, expect } from 'vitest'
+import { expect, it } from "vitest"
 
-it('works on my computer', () => {
+it("works on my computer", () => {
 	const worksOnMyComputer = true
 
 	expect(worksOnMyComputer).toBe(true)

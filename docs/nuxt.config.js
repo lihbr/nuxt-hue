@@ -1,18 +1,18 @@
-import { withDocus } from 'docus'
+import { withDocus } from "docus"
 
 export default withDocus({
 	generate: {
-		fallback: true
+		fallback: true,
 	},
 	buildModules: [
 		[
-			'@nuxtjs/ackee',
+			"@nuxtjs/ackee",
 			{
 				server: process.env.ACKEE_ENDPOINT,
 				domainId: process.env.ACKEE_ID,
 				ignoreLocalhost: true,
-				detailed: true
-			}
-		]
-	]
+				detailed: true,
+			},
+		],
+	],
 })

@@ -1,9 +1,10 @@
-import exit from 'exit'
+import process from "node:process"
+import exit from "exit"
 
-import commands from './cli/commands'
-import { logger, kebabTopascalCase } from './utils'
+import commands from "./cli/commands"
+import { kebabTopascalCase, logger } from "./utils"
 
-async function run () {
+async function run() {
 	const [command, ...args] = process.argv.slice(2)
 
 	const cmd = commands[kebabTopascalCase(command)]
@@ -11,13 +12,13 @@ async function run () {
 		await cmd.run(args)
 	} else {
 		switch (command) {
-			case '--version':
-			case '-v':
+			case "--version":
+			case "-v":
 				await commands.version.run()
 				break
 
-			case '--help':
-			case '-h':
+			case "--help":
+			case "-h":
 			default:
 				await commands.help.run()
 				break
