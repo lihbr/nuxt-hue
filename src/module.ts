@@ -55,7 +55,7 @@ export default defineNuxtModule<NuxtHue.Config>({
 
 			// Expose options through public runtime config
 			nuxt.options.runtimeConfig.public ||= {} as typeof nuxt.options.runtimeConfig.public
-			nuxt.options.runtimeConfig.public["nuxt-hue"] = mergedOptions
+			nuxt.options.runtimeConfig.public["nuxt-hue"] = mergedOptions as Required<NuxtHue.Config>
 
 			nuxt.options.vite.server ||= {}
 			nuxt.options.vite.server!.fs ||= {}

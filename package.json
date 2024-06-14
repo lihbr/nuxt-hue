@@ -48,12 +48,13 @@
 		"dev:build": "nuxi build playground",
 		"postinstall": "node postinstall.js",
 		"lint": "eslint .",
-		"prepare": "nuxi prepare playground && npm run build",
-		"release": "npm run test && standard-version --release-as patch && git push --follow-tags && npm run build && npm publish",
+		"prepare": "nuxi prepare playground && pnpm build",
+		"release": "pnpm test && standard-version --release-as patch && git push --follow-tags && pnpm build && npm publish",
 		"release:dry": "standard-version --release-as patch --dry-run",
-		"release:rc": "npm run test && standard-version --release-as major --prerelease rc && git push --follow-tags && npm run build && npm publish --tag rc",
+		"release:rc": "pnpm test && standard-version --release-as major --prerelease rc && git push --follow-tags && pnpm build && npm publish --tag rc",
 		"release:rc:dry": "standard-version --release-as major --prerelease rc --dry-run",
-		"test": "npm run lint && npm run unit && npm run build",
+		"typecheck": "tsc --noEmit",
+		"test": "pnpm lint && pnpm typecheck && pnpm unit && pnpm build",
 		"unit": "vitest run --coverage",
 		"unit:watch": "vitest watch"
 	},
@@ -69,7 +70,8 @@
 		"node-fetch": "^2.7.0",
 		"rc9": "^2.1.2",
 		"rxjs": "^7.8.1",
-		"std-env": "^3.7.0"
+		"std-env": "^3.7.0",
+		"typescript": "^5.4.5"
 	},
 	"devDependencies": {
 		"@lihbr/eslint-config": "^0.0.2",

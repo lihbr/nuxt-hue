@@ -1,42 +1,84 @@
 name: ci
 
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+on: push
 
 jobs:
-  ci:
-    runs-on: ${{ matrix.os }}
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Lint
+        run: pnpm lint
+
+  typecheck:
+    runs-on: ubuntu-latest
+    name: typecheck (node ${{ matrix.node }}, typescript ${{ matrix.typescript }})
 
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        node: [20]
+        node: [lts/*]
+        # Based on https://majors.nullvoxpopuli.com/q?minors=on&packages=typescript
+        typescript: ["5.3", "5.4"]
+      fail-fast: false
 
     steps:
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v4
+
+      - name: Set node ${{ matrix.node }}
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
 
-      - name: checkout
-        uses: actions/checkout@master
-
-      - name: cache node_modules
-        uses: actions/cache@v1
-        with:
-          path: node_modules
-          key: ${{ matrix.os }}-node-v${{ matrix.node }}-deps-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
 
       - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: yarn
+        run: pnpm install
 
-      - name: Test
-        run: yarn test
+      - name: Set typescript ${{ matrix.typescript }}
+        run: pnpm add --save-dev typescript@${{ matrix.typescript }} && npx tsc --version
 
-      - name: Coverage
-        uses: codecov/codecov-action@v1
+      - name: Typecheck
+        run: pnpm typecheck
+
+  test:
+    runs-on: ${{ matrix.os }}
+    name: test (os ${{ matrix.os }}, node ${{ matrix.node }})
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node: [lts/*]
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set node ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Unit
+        run: pnpm unit
+
+      - name: Build
+        run: pnpm build
