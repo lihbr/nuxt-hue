@@ -2,6 +2,7 @@
 	"name": "nuxt-hue",
 	"type": "module",
 	"version": "0.4.24",
+	"packageManager": "pnpm@9.3.0",
 	"description": "Enlighten your Nuxt experience",
 	"author": "Lucie Haberer <hello@lihbr.com> (https://lihbr.com)",
 	"license": "MIT",
