@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.25](https://github.com/lihbr/nuxt-hue/compare/v0.4.24...v0.4.25) (2024-06-14)
+
+
+### Chore
+
+* **deps:** migrate to pnpm, refresh dependencies ([b86edbe](https://github.com/lihbr/nuxt-hue/commit/b86edbea0e346043c04521c7fee76f2f78d209b3))
+* **deps:** update nuxt ([833483a](https://github.com/lihbr/nuxt-hue/commit/833483a2dca04fa71928fc21ccaec697dd0d4439))
+
 ### [0.4.24](https://github.com/lihbr/nuxt-hue/compare/v0.4.23...v0.4.24) (2024-06-14)
 
 
